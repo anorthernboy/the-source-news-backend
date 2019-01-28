@@ -1,3 +1,15 @@
+exports.createRef = (arr, column) => {
+  return arr.reduce((acc, curr) => {
+    acc[curr[column]] = curr[column]
+    return acc;
+  }, {})
+}
+
+const createTime = (num) => {
+  const numDate = new Date(num)
+  return numDate.toDateString()
+}
+
 exports.formatArticles = (articleData, topicRef, userRef) => {
 
   return articleData.map((article) => {
@@ -5,21 +17,17 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
     const {
       topic,
       created_by,
+      created_at,
       ...restOfArticle
     } = article;
 
     return {
-      topic: topicRef.slug,
-      created_by: userRef.username,
-      ...restOfArticle
+      topic: topicRef[topic],
+      created_by: userRef[created_by],
+      created_at: createTime(created_at),
+      ...restOfArticle,
     };
   });
-
-
-  // return articleData.map((article) => {
-  //   article.topic = topicRef.slug
-  //   article.created_by = userRef.username
-  // });
 }
 
 
@@ -30,20 +38,15 @@ exports.formatComments = (commentData, userRef, articleRef) => {
     const {
       created_by,
       belongs_to,
+      created_at,
       ...restOfComment
     } = comment;
 
     return {
-      created_by: userRef.username,
-      belongs_to: articleRef.article_id,
-      ...restOfComment
+      created_by: userRef[created_by],
+      belongs_to: articleRef[belongs_to],
+      created_at: createTime(created_at),
+      ...restOfComment,
     };
   });
-
-
-
-  // return commentData.map((comment) => {
-  //   comment.created_by = userRef.username
-  //   comment.belongs_to = articleRef.article_id
-  // });
 }

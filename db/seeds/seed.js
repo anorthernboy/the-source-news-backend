@@ -6,6 +6,7 @@ const {
 } = require('../data/index');
 
 const {
+  createRef,
   formatArticles,
   formatComments
 } = require('../data/utils/index');
@@ -22,18 +23,24 @@ exports.seed = function (connection, Promise) {
     })
     .then(([userRows, topicRows]) => {
 
-      // formats articles
-      const formattedArticles = formatArticles(articleData, topicRows, userRows)
+      const userRef = createRef(userRows, 'username');
 
-      console.log(topicRows)
+      const topicRef = createRef(topicRows, 'slug');
+
+      const formattedArticles = formatArticles(articleData, topicRef, userRef);
+
+      console.log(formattedArticles)
 
       const articleRows = connection('articles').insert(formattedArticles).returning('*')
       return Promise.all([articleRows, userRows])
     })
     .then(([articleRows, userRows]) => {
 
-      // formats comments
-      const formattedComments = formatComments(commentData, userRows, articleRows)
+      const articleRef = createRef(articleRows, 'article_id');
+
+      const userRef = createRef(userRows, 'username');
+
+      const formattedComments = formatComments(commentData, userRef, articleRef)
 
       return connection('comments').insert(formattedComments).returning('*')
     });
