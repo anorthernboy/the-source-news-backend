@@ -1,4 +1,4 @@
-exports.up = function (knex, Promise) {
+exports.up = function (connection, Promise) {
   return connection.schema.createTable('users', function (usersTable) {
     usersTable.string('username').primary();
     usersTable.string('avatar_url');
@@ -7,6 +7,6 @@ exports.up = function (knex, Promise) {
   })
 };
 
-exports.down = function (knex, Promise) {
+exports.down = function (connection, Promise) {
   return connection.schema.dropTable('users')
 };
