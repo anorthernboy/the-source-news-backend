@@ -2,13 +2,13 @@ const {
   articleData,
   topicData,
   userData,
-  commentData
+  commentData,
 } = require('../data/index');
 
 const {
   createRef,
   formatArticles,
-  formatComments
+  formatComments,
 } = require('../data/utils/index');
 
 exports.seed = function (connection, Promise) {
@@ -29,10 +29,10 @@ exports.seed = function (connection, Promise) {
 
       const formattedArticles = formatArticles(articleData, topicRef, userRef);
 
-      console.log(formattedArticles)
-
       const articleRows = connection('articles').insert(formattedArticles).returning('*')
+
       return Promise.all([articleRows, userRows])
+
     })
     .then(([articleRows, userRows]) => {
 
@@ -42,6 +42,8 @@ exports.seed = function (connection, Promise) {
 
       const formattedComments = formatComments(commentData, userRef, articleRef)
 
-      return connection('comments').insert(formattedComments).returning('*')
+      const commentRows = connection('comments').insert(formattedComments).returning('*')
+
+      return Promise.all([commentRows, articleRows])
     });
 };

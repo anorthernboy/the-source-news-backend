@@ -18,6 +18,7 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
       topic,
       created_by,
       created_at,
+      votes,
       ...restOfArticle
     } = article;
 
@@ -25,6 +26,7 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
       topic: topicRef[topic],
       created_by: userRef[created_by],
       created_at: createTime(created_at),
+      votes,
       ...restOfArticle,
     };
   });
