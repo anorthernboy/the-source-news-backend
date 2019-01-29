@@ -10,3 +10,9 @@ exports.fetchArticlesById = (article_id) => {
     .select('*')
     .where('articles.article_id', article_id);
 };
+
+exports.fetchCommentsByArticleId = (article_id) => {
+  return connection('comments')
+    .select('*')
+    .where('comments.article_id', article_id);
+};

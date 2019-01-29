@@ -117,6 +117,32 @@ describe('/api', () => {
     //     });
     // });
 
+    it('GET response status:200 and a user object for the username', () => {
+      return request
+        .get('/api/users/butter_bridge')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.user).to.be.an('array');
+          expect(body.user[0].username).to.equal('butter_bridge');
+          expect(body.user[0]).to.contains.keys('username', 'name', 'avatar_url');
+        });
+    });
+
+    it('GET response status:200 and an array of articles for the username', () => {
+      return request
+        .get('/api/users/butter_bridge/articles')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.be.an('array');
+          expect(body.articles[0].username).to.equal('butter_bridge');
+          expect(body.articles[0]).to.contains.keys('article_id', 'title', 'body', 'votes', 'topic', 'username', 'created_at');
+        });
+    });
+
   });
 
 
@@ -166,6 +192,19 @@ describe('/api', () => {
           expect(body.article).to.be.an('array');
           expect(body.article[0].article_id).to.equal(1);
           expect(body.article[0]).to.contains.keys('article_id', 'title', 'body', 'votes', 'topic', 'username', 'created_at');
+        });
+    });
+
+    it('GET response status:200 and an array of comment objects for the article_id', () => {
+      return request
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.comments).to.be.an('array');
+          expect(body.comments[0].article_id).to.equal(1);
+          expect(body.comments[0]).to.contains.keys('comment_id', 'username', 'article_id', 'votes', 'created_at', 'body');
         });
     });
 
