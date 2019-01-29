@@ -17,6 +17,7 @@ describe('/api', () => {
   after(() => connection.destroy());
 
   describe('/topics', () => {
+
     it('GET response status:200 and an array of topic objects', () => {
       return request
         .get('/api/topics')
@@ -28,10 +29,12 @@ describe('/api', () => {
           expect(body.topics[0]).to.contains.keys('description', 'slug')
         });
     });
+
   });
 
 
   describe('/users', () => {
+
     it('GET response status:200 and an array of user objects', () => {
       return request
         .get('/api/users')
@@ -43,10 +46,12 @@ describe('/api', () => {
           expect(body.users[0]).to.contains.keys('username', 'name', 'avatar_url')
         });
     });
+
   });
 
 
   describe('/articles', () => {
+
     it('GET response status:200 and an array of article objects', () => {
       return request
         .get('/api/articles')
@@ -58,10 +63,12 @@ describe('/api', () => {
           expect(body.articles[0]).to.contains.keys('article_id', 'title', 'body', 'votes', 'topic', 'username', 'created_at')
         });
     });
+
   });
 
 
   describe('/comments', () => {
+
     it('GET response status:200 and an array of comment objects', () => {
       return request
         .get('/api/comments')
@@ -74,4 +81,5 @@ describe('/api', () => {
         });
     });
   });
+
 })
