@@ -16,3 +16,9 @@ exports.fetchArticlesByUsername = (username) => {
     .select('*')
     .where('articles.username', username);
 };
+
+exports.addNewUser = (user) => {
+  return connection('users')
+    .insert(user)
+    .returning('*')
+};

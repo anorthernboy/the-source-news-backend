@@ -5,16 +5,20 @@ exports.fetchTopics = () => {
     .select('*');
 };
 
-// exports.addNewTopic = (body) => {
-//   return connection.insert({
-//       slug: body.slug,
-//       description: body.description,
-//     }).into('topics')
-//     .returning('*');
-// };
+exports.addNewTopic = (topic) => {
+  return connection('topics')
+    .insert(topic)
+    .returning('*')
+};
 
 exports.fetchArticlesByTopic = (topic) => {
   return connection('articles')
     .select('*')
     .where('articles.topic', topic);
+};
+
+exports.addNewArticle = (article) => {
+  return connection('articles')
+    .insert(article)
+    .returning('*')
 };

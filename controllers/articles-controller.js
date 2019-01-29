@@ -2,6 +2,7 @@ const {
   fetchArticles,
   fetchArticlesById,
   fetchCommentsByArticleId,
+  addNewComment,
 } = require('../db/models/articles-model');
 
 exports.getArticles = (req, res, next) => {
@@ -32,4 +33,18 @@ exports.getCommentsByArticleId = (req, res, next) => {
       comments,
     }))
     .catch(next);
+};
+
+exports.addCommentByArticleId = (req, res, next) => {
+  const {
+    article_id,
+  } = req.params;
+
+  req.body.article_id = article_id;
+
+  addNewComment(req.body)
+    .then(comment => res.status(201).json({
+      comment
+    }))
+    .catch(next)
 };

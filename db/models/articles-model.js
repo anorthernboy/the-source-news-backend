@@ -16,3 +16,9 @@ exports.fetchCommentsByArticleId = (article_id) => {
     .select('*')
     .where('comments.article_id', article_id);
 };
+
+exports.addNewComment = (comment) => {
+  return connection('comments')
+    .insert(comment)
+    .returning('*')
+};

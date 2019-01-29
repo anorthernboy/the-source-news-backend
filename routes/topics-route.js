@@ -3,12 +3,15 @@ const {
   getTopics,
   addTopic,
   getArticlesByTopic,
+  addArticleByTopic,
 } = require('../controllers/topics-controller');
 
 router.get('/', getTopics);
 
-// router.post('/', addTopic);
+router.post('/', addTopic);
 
 router.get('/:topic/articles', getArticlesByTopic);
 
-module.exports = router;
+router.post('/:topic/articles', addArticleByTopic),
+
+  module.exports = router;
