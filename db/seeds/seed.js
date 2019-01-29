@@ -7,6 +7,7 @@ const {
 
 const {
   createRef,
+  createArticleRef,
   formatArticles,
   formatComments,
 } = require('../data/utils/index');
@@ -36,7 +37,7 @@ exports.seed = function (connection, Promise) {
     })
     .then(([articleRows, userRows]) => {
 
-      const articleRef = createRef(articleRows, 'article_id');
+      const articleRef = createArticleRef(articleRows, 'title', 'article_id');
 
       const userRef = createRef(userRows, 'username');
 

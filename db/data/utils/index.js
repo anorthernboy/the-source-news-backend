@@ -5,6 +5,13 @@ exports.createRef = (arr, column) => {
   }, {})
 }
 
+exports.createArticleRef = (arr, col1, col2) => {
+  return arr.reduce((acc, curr) => {
+    acc[curr[col1]] = curr[col2]
+    return acc;
+  }, {})
+}
+
 const createTime = (num) => {
   const numDate = new Date(num)
   return numDate.toDateString()
@@ -18,7 +25,6 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
       topic,
       created_by,
       created_at,
-      votes,
       ...restOfArticle
     } = article;
 
@@ -26,7 +32,6 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
       topic: topicRef[topic],
       created_by: userRef[created_by],
       created_at: createTime(created_at),
-      votes,
       ...restOfArticle,
     };
   });
