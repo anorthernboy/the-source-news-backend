@@ -10,7 +10,7 @@ const {
   createArticleRef,
   formatArticles,
   formatComments,
-} = require('../data/utils/index');
+} = require('../utils/index');
 
 exports.seed = function (connection, Promise) {
   return connection.migrate.rollback()
