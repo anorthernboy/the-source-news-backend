@@ -30,10 +30,16 @@ exports.getArticlesById = (req, res, next) => {
 };
 
 exports.patchArticleById = (req, res, next) => {
+
   const {
     article_id,
   } = req.params;
-  updateArticle(article_id)
+
+  const {
+    inc_votes,
+  } = req.body;
+
+  updateArticle(article_id, inc_votes)
     .then(article => res.status(200).json({
       article,
     }))
@@ -76,9 +82,23 @@ exports.addCommentByArticleId = (req, res, next) => {
     .catch(next)
 };
 
-// exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
-//   updateVote().then().catch();
-// };
+exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
+
+  const {
+    article_id,
+    comment_id,
+  } = req.params;
+
+  const {
+    inc_votes,
+  } = req.body;
+
+  updateVote(article_id, comment_id, inc_votes)
+    .then(comment => res.status(200).json({
+      comment,
+    }))
+    .catch(next);
+};
 
 exports.deleteArticleCommentByCommentId = (req, res, next) => {
   const {

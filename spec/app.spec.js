@@ -352,20 +352,22 @@ describe("/api", () => {
 
     describe("patchArticleById()", () => {
 
+      // only works where votes starting value is 0 at the moment
+
       it("PUT response status:200 and an updated article object for the article_id", () => {
-
-        const updatedArticle = {};
-
+        const updateArticle = {
+          inc_votes: 10,
+        };
         return request
-          .put("/api/articles/1")
-          .send(updatedArticle)
+          .put("/api/articles/2")
+          .send(updateArticle)
           .expect(200)
           .then(({
             body
           }) => {
             expect(body.article).to.be.an("array");
-            expect(body.article[0].article_id).to.equal(1);
-            expect(body.article[0].title).to.equal("");
+            expect(body.article[0].article_id).to.equal(2);
+            expect(body.article[0].votes).to.equal(10);
             expect(body.article[0]).to.contains.keys(
               "article_id",
               "title",
@@ -441,7 +443,36 @@ describe("/api", () => {
 
     })
 
-    describe("patchArticleCommentVoteByCommentId()", () => {});
+    describe("patchArticleCommentVoteByCommentId()", () => {
+
+      // only works where votes starting value is 0 at the moment
+
+      it("PUT response status:200 and an updated comment object for the comment_id", () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .put("/api/articles/1/comments/5")
+          .send(updateComment)
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.comment).to.be.an("array");
+            expect(body.comment[0].comment_id).to.equal(5);
+            expect(body.comment[0].votes).to.equal(10);
+            expect(body.comment[0]).to.contains.keys(
+              "comment_id",
+              "username",
+              "article_id",
+              "votes",
+              "created_at",
+              "body",
+            );
+          });
+      });
+
+    });
 
     describe("deleteArticleCommentByCommentId()", () => {
 
@@ -479,7 +510,7 @@ describe("/api", () => {
               "article_id",
               "votes",
               "created_at",
-              "body"
+              "body",
             );
           });
       });

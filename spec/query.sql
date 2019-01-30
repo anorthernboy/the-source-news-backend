@@ -3,8 +3,7 @@ craig_nc_knews_test;
 
 SELECT comment_id, article_id
 FROM comments
-WHERE comments.comment_id = 1
-  AND comments.article_id = 9;
+WHERE comments.votes = 0;
 
 -- SELECT *
 -- FROM articles

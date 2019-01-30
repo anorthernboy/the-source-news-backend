@@ -12,8 +12,13 @@ exports.fetchArticlesById = (article_id) => {
     .where('articles.article_id', article_id);
 };
 
-exports.updateArticle = (article_id) => {
+exports.updateArticle = (article_id, inc_votes) => {
   return connection('articles')
+    .where('article_id', article_id)
+    .update({
+      votes: inc_votes,
+    })
+    .returning('*')
 };
 
 exports.removeArticle = (article_id) => {
@@ -34,9 +39,15 @@ exports.addNewComment = (comment) => {
     .returning('*');
 };
 
-// exports.updateVote = () => {
-
-// };
+exports.updateVote = (article_id, comment_id, inc_votes) => {
+  return connection('comments')
+    .where('article_id', article_id)
+    .andWhere('comment_id', comment_id)
+    .update({
+      votes: inc_votes,
+    })
+    .returning('*');
+};
 
 exports.removeComment = (article_id, comment_id) => {
   return connection('comments')
