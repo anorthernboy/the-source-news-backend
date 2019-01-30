@@ -29,9 +29,16 @@ exports.getArticlesById = (req, res, next) => {
     .catch(next);
 };
 
-// exports.patchArticleById = (req, res, next) => {
-//   updateArticle().then().catch(next);
-// };
+exports.patchArticleById = (req, res, next) => {
+  const {
+    article_id,
+  } = req.params;
+  updateArticle(article_id)
+    .then(article => res.status(200).json({
+      article,
+    }))
+    .catch(next);
+};
 
 exports.deleteArticleById = (req, res, next) => {
   const {
@@ -39,7 +46,7 @@ exports.deleteArticleById = (req, res, next) => {
   } = req.params;
   removeArticle(article_id)
     .then(article => res.status(204).json({
-      article
+      article,
     }))
     .catch(next);
 };
@@ -73,6 +80,14 @@ exports.addCommentByArticleId = (req, res, next) => {
 //   updateVote().then().catch();
 // };
 
-// exports.deleteArticleCommentByCommentId = (req, res, next) => {
-//   deleteComment().then().catch(next);
-// };
+exports.deleteArticleCommentByCommentId = (req, res, next) => {
+  const {
+    article_id,
+    comment_id,
+  } = req.params;
+  removeComment(article_id, comment_id)
+    .then(comment => res.status(204).json({
+      comment,
+    }))
+    .catch(next);
+};

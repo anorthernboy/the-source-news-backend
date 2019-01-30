@@ -12,9 +12,9 @@ exports.fetchArticlesById = (article_id) => {
     .where('articles.article_id', article_id);
 };
 
-// exports.updateArticle = () => {
-
-// };
+exports.updateArticle = (article_id) => {
+  return connection('articles')
+};
 
 exports.removeArticle = (article_id) => {
   return connection('articles')
@@ -38,8 +38,9 @@ exports.addNewComment = (comment) => {
 
 // };
 
-exports.removeComment = (comment_id) => {
+exports.removeComment = (article_id, comment_id) => {
   return connection('comments')
-    .where('comment_id', comment_id)
+    .where('article_id', article_id)
+    .andWhere('comment_id', comment_id)
     .del();
 };

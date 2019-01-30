@@ -350,19 +350,42 @@ describe("/api", () => {
 
     })
 
-    describe("patchArticleById()", () => {});
+    describe("patchArticleById()", () => {
 
-    describe.only("deleteArticleById()", () => {
+      it("PUT response status:200 and an updated article object for the article_id", () => {
+
+        const updatedArticle = {};
+
+        return request
+          .put("/api/articles/1")
+          .send(updatedArticle)
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.article).to.be.an("array");
+            expect(body.article[0].article_id).to.equal(1);
+            expect(body.article[0].title).to.equal("");
+            expect(body.article[0]).to.contains.keys(
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "username",
+              "created_at"
+            );
+          });
+      });
+
+    });
+
+    describe("deleteArticleById()", () => {
 
       it("DELETE response status:204 and no content", () => {
         return request
           .delete("/api/articles/1")
           .expect(204)
-          .then(({
-            body
-          }) => {
-            expect(body.article).to.equal(undefined);
-          });
       })
 
     });
@@ -420,7 +443,15 @@ describe("/api", () => {
 
     describe("patchArticleCommentVoteByCommentId()", () => {});
 
-    describe("deleteArticleCommentByCommentId()", () => {});
+    describe("deleteArticleCommentByCommentId()", () => {
+
+      it("DELETE response status:204 and no content", () => {
+        return request
+          .delete("/api/articles/9/comments/1")
+          .expect(204)
+      })
+
+    });
 
   });
 
