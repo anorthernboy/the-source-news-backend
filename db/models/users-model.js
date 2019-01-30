@@ -1,25 +1,19 @@
 const connection = require('../connection');
 
 
-exports.fetchUsers = () => {
-  return connection('users')
-    .select('*');
-};
+exports.fetchUsers = () => connection('users')
+  .select('*');
 
-exports.addNewUser = (user) => {
-  return connection('users')
-    .insert(user)
-    .returning('*');
-};
+exports.addNewUser = user => connection('users')
+  .insert(user)
+  .returning('*');
 
-exports.fetchUserByUsername = (username) => {
-  return connection('users')
-    .select('*')
-    .where('users.username', username);
-};
+exports.fetchUserByUsername = username => connection('users')
+  .select('*')
+  .where('users.username', username);
 
-exports.fetchArticlesByUsername = (username) => {
-  return connection('articles')
-    .select('*')
-    .where('articles.username', username);
-};
+exports.fetchArticlesByUsername = (username, limit = 5, sort_by = 'articles.created_at', order = 'DESC') => connection('articles')
+  .select('*')
+  .limit(limit)
+  .orderBy(sort_by, order)
+  .where('articles.username', username);

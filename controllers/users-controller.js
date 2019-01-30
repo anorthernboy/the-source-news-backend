@@ -37,7 +37,12 @@ exports.getArticlesByUsername = (req, res, next) => {
   const {
     username,
   } = req.params;
-  fetchArticlesByUsername(username)
+  const {
+    limit,
+    sort_by,
+    order,
+  } = req.query;
+  fetchArticlesByUsername(username, limit, sort_by, order)
     .then(articles => res.status(200).json({
       articles,
     }))

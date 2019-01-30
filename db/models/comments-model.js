@@ -1,7 +1,5 @@
 const connection = require('../connection');
 
 
-exports.fetchComments = () => {
-  return connection('comments')
-    .select('*');
-};
+exports.fetchComments = () => connection('comments')
+  .select('*');

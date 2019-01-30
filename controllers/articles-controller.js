@@ -11,7 +11,12 @@ const {
 
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles()
+  const {
+    limit,
+    sort_by,
+    order,
+  } = req.query;
+  fetchArticles(limit, sort_by, order)
     .then(articles => res.status(200).json({
       articles,
     }))
@@ -30,7 +35,6 @@ exports.getArticlesById = (req, res, next) => {
 };
 
 exports.patchArticleById = (req, res, next) => {
-
   const {
     article_id,
   } = req.params;
@@ -61,7 +65,12 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const {
     article_id,
   } = req.params;
-  fetchCommentsByArticleId(article_id)
+  const {
+    limit,
+    sort_by,
+    sort_ascending,
+  } = req.query;
+  fetchCommentsByArticleId(article_id, limit, sort_by, sort_ascending)
     .then(comments => res.status(200).json({
       comments,
     }))
@@ -79,11 +88,10 @@ exports.addCommentByArticleId = (req, res, next) => {
     .then(comment => res.status(201).json({
       comment,
     }))
-    .catch(next)
+    .catch(next);
 };
 
 exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
-
   const {
     article_id,
     comment_id,

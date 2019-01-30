@@ -1,5 +1,5 @@
 const {
-  fetchComments
+  fetchComments,
 } = require('../db/models/comments-model');
 
 

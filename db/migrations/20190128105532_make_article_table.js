@@ -1,5 +1,5 @@
 exports.up = function (connection, Promise) {
-  return connection.schema.createTable('articles', function (articlesTable) {
+  return connection.schema.createTable('articles', (articlesTable) => {
     articlesTable.increments('article_id').primary();
     articlesTable.string('title');
     articlesTable.text('body');
@@ -7,9 +7,9 @@ exports.up = function (connection, Promise) {
     articlesTable.string('topic').references('topics.slug').onDelete('CASCADE');
     articlesTable.string('username').references('users.username').onDelete('CASCADE');
     articlesTable.timestamp('created_at').defaultTo(connection.fn.now());
-  })
-}
+  });
+};
 
 exports.down = function (connection, Promise) {
-  return connection.schema.dropTable('articles')
+  return connection.schema.dropTable('articles');
 };
