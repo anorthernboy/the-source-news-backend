@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const {
-  getComments
+  getComments,
 } = require('../controllers/comments-controller');
 
 

@@ -6,7 +6,7 @@ const {
   fetchCommentsByArticleId,
   addNewComment,
   updateVote,
-  deleteComment,
+  removeComment,
 } = require('../db/models/articles-model');
 
 
@@ -33,9 +33,16 @@ exports.getArticlesById = (req, res, next) => {
 //   updateArticle().then().catch(next);
 // };
 
-// exports.deleteArticleById = (req, res, next) => {
-//   removeArticle().then().catch(next);
-// };
+exports.deleteArticleById = (req, res, next) => {
+  const {
+    article_id,
+  } = req.params;
+  removeArticle(article_id)
+    .then(article => res.status(204).json({
+      article
+    }))
+    .catch(next);
+};
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const {

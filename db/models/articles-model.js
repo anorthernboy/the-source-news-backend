@@ -16,9 +16,11 @@ exports.fetchArticlesById = (article_id) => {
 
 // };
 
-// exports.removeArticle = () => {
-
-// };
+exports.removeArticle = (article_id) => {
+  return connection('articles')
+    .where('article_id', article_id)
+    .del();
+};
 
 exports.fetchCommentsByArticleId = (article_id) => {
   return connection('comments')
@@ -36,6 +38,8 @@ exports.addNewComment = (comment) => {
 
 // };
 
-// exports.deleteComment = () => {
-
-// };
+exports.removeComment = (comment_id) => {
+  return connection('comments')
+    .where('comment_id', comment_id)
+    .del();
+};

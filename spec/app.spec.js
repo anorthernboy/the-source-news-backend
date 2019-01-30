@@ -156,7 +156,7 @@ describe("/api", () => {
 
   describe("/users", () => {
 
-    describe('fetchUsers()', () => {
+    describe('getUsers()', () => {
 
       it("GET response status:200 and an array of user objects", () => {
         return request
@@ -198,7 +198,7 @@ describe("/api", () => {
 
     })
 
-    describe('addNewUser()', () => {
+    describe('addUser()', () => {
 
       it("POST response status:201 and the new user object", () => {
         const newUser = {
@@ -223,7 +223,7 @@ describe("/api", () => {
 
     })
 
-    describe('fetchUserByUsername()', () => {
+    describe('getUserByUsername()', () => {
 
       it("GET response status:200 and a user object for the username", () => {
         return request
@@ -244,7 +244,7 @@ describe("/api", () => {
 
     })
 
-    describe('fetchArticlesByUsername()', () => {
+    describe('getArticlesByUsername()', () => {
 
       it("GET response status:200 and an array of articles for the username", () => {
         return request
@@ -279,7 +279,7 @@ describe("/api", () => {
 
   describe("/articles", () => {
 
-    describe("fetchArticles()", () => {
+    describe("getArticles()", () => {
 
       it("GET response status:200 and an array of article objects", () => {
         return request
@@ -325,7 +325,7 @@ describe("/api", () => {
 
     })
 
-    describe("fetchArticlesById()", () => {
+    describe("getArticlesById()", () => {
 
       it("GET response status:200 and an array of article objects for the article_id", () => {
         return request
@@ -350,11 +350,24 @@ describe("/api", () => {
 
     })
 
-    describe("updateArticle()", () => {});
+    describe("patchArticleById()", () => {});
 
-    describe("removeArticle()", () => {});
+    describe.only("deleteArticleById()", () => {
 
-    describe("fetchCommentsByArticleId()", () => {
+      it("DELETE response status:204 and no content", () => {
+        return request
+          .delete("/api/articles/1")
+          .expect(204)
+          .then(({
+            body
+          }) => {
+            expect(body.article).to.equal(undefined);
+          });
+      })
+
+    });
+
+    describe("getCommentsByArticleId()", () => {
 
       it("GET response status:200 and an array of comment objects for the article_id", () => {
         return request
@@ -378,7 +391,7 @@ describe("/api", () => {
 
     })
 
-    describe("addNewComment()", () => {
+    describe("addCommentByArticleId()", () => {
 
       it("POST response status:201 and the new comment object", () => {
         const newComment = {
@@ -405,9 +418,9 @@ describe("/api", () => {
 
     })
 
-    describe("updateVote()", () => {});
+    describe("patchArticleCommentVoteByCommentId()", () => {});
 
-    describe("deleteComment()", () => {});
+    describe("deleteArticleCommentByCommentId()", () => {});
 
   });
 

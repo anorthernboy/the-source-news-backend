@@ -18,7 +18,7 @@ router.get('/:article_id', getArticlesById);
 
 // router.patch('/:article_id', patchArticleById);
 
-// router.delete('/:article_id', deleteArticleById);
+router.delete('/:article_id', deleteArticleById);
 
 router.get('/:article_id/comments', getCommentsByArticleId);
 
