@@ -115,6 +115,69 @@ describe("/api", () => {
           });
       });
 
+      it("GET response status:200 and an array of 10 article objects for the topic [DEFAULT CASE]", () => {
+        return request
+          .get("/api/topics/mitch/articles")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles).to.have.length(10);
+          });
+      });
+
+      it("GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]", () => {
+        return request
+          .get("/api/topics/mitch/articles?limit=5")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles).to.have.length(5);
+          });
+      });
+
+      it("GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]", () => {
+        return request
+          .get("/api/topics/mitch/articles")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles).to.have.length(10);
+            expect(body.articles[0].title).to.equal("Living in the shadow of a great man");
+          });
+      });
+
+      it("GET response status:200 and an array of 10 article objects for the topic sorted by title [DEFAULT DESC]", () => {
+        return request
+          .get("/api/topics/mitch/articles?sort_by=title")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles).to.have.length(10);
+            expect(body.articles[0].title).to.equal("Z");
+          });
+      });
+
+      it("GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC", () => {
+        return request
+          .get("/api/topics/mitch/articles?order=ASC")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles).to.have.length(10);
+            expect(body.articles[0].title).to.equal("Moustache");
+          });
+      });
+
     })
 
     describe('addArticleByTopic()', () => {

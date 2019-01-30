@@ -1,15 +1,10 @@
 \c
 craig_nc_knews_test;
 
-SELECT comment_id, article_id
-FROM comments
-WHERE comments.votes = 0;
-
--- SELECT *
--- FROM articles
---   JOIN comments
---   ON articles.article_id = comments.article_id
--- ;
+SELECT topics.slug, articles.title, articles.created_at
+FROM articles LEFT JOIN topics ON topics.slug = articles.topic
+ORDER BY articles.created_at ASC
+LIMIT 10;
 
 
 -- SELECT topics.slug, topics.description, COUNT(articles.topic)

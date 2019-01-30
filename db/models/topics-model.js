@@ -12,9 +12,11 @@ exports.addNewTopic = (topic) => {
     .returning('*');
 };
 
-exports.fetchArticlesByTopic = (topic) => {
+exports.fetchArticlesByTopic = (topic, limit = 10, sort_by = 'articles.created_at', order = 'DESC') => {
   return connection('articles')
     .select('*')
+    .limit(limit)
+    .orderBy(sort_by, order)
     .where('articles.topic', topic);
 };
 

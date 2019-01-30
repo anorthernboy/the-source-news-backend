@@ -27,7 +27,12 @@ exports.getArticlesByTopic = (req, res, next) => {
   const {
     topic,
   } = req.params;
-  fetchArticlesByTopic(topic)
+  const {
+    limit,
+    sort_by,
+    order,
+  } = req.query;
+  fetchArticlesByTopic(topic, limit, sort_by, order)
     .then(articles => res.status(200).json({
       articles,
     }))
