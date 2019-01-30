@@ -1,5 +1,6 @@
 const connection = require('../connection');
 
+
 exports.fetchTopics = () => {
   return connection('topics')
     .select('*');
@@ -8,7 +9,7 @@ exports.fetchTopics = () => {
 exports.addNewTopic = (topic) => {
   return connection('topics')
     .insert(topic)
-    .returning('*')
+    .returning('*');
 };
 
 exports.fetchArticlesByTopic = (topic) => {
@@ -20,5 +21,5 @@ exports.fetchArticlesByTopic = (topic) => {
 exports.addNewArticle = (article) => {
   return connection('articles')
     .insert(article)
-    .returning('*')
+    .returning('*');
 };

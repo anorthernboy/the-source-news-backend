@@ -199,6 +199,7 @@ describe("/api", () => {
     })
 
     describe('addNewUser()', () => {
+
       it("POST response status:201 and the new user object", () => {
         const newUser = {
           username: "stilton_01",
@@ -219,6 +220,7 @@ describe("/api", () => {
               "avatar_url");
           });
       });
+
     })
 
     describe('fetchUserByUsername()', () => {
@@ -239,6 +241,7 @@ describe("/api", () => {
             );
           });
       });
+
     })
 
     describe('fetchArticlesByUsername()', () => {
@@ -263,6 +266,7 @@ describe("/api", () => {
             );
           });
       });
+
     })
 
   });
@@ -274,111 +278,136 @@ describe("/api", () => {
   //                  //
 
   describe("/articles", () => {
-    it("GET response status:200 and an array of article objects", () => {
-      return request
-        .get("/api/articles")
-        .expect(200)
-        .then(({
-          body
-        }) => {
-          expect(body.articles).to.be.an("array");
-          expect(body.articles[0]).to.contains.keys(
-            "article_id",
-            "title",
-            "body",
-            "votes",
-            "topic",
-            "username",
-            "created_at"
-          );
-        });
-    });
 
-    // it('GET response status:400 and a bad request message', () => {
-    //   return request
-    //     .get('/api/3')
-    //     .expect(400)
-    //     .then(({
-    //       body,
-    //     }) => {
-    //       expect(body.message).to.equal('bad request');
-    //     });
-    // });
+    describe("fetchArticles()", () => {
 
-    // it('GET response status:404 and a not found message', () => {
-    //   return request
-    //     .get('/api/article-article')
-    //     .expect(404)
-    //     .then(({
-    //       body,
-    //     }) => {
-    //       expect(body.message).to.equal('not found');
-    //     });
-    // });
+      it("GET response status:200 and an array of article objects", () => {
+        return request
+          .get("/api/articles")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.articles).to.be.an("array");
+            expect(body.articles[0]).to.contains.keys(
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "username",
+              "created_at"
+            );
+          });
+      });
 
-    it("GET response status:200 and an array of article objects for the article_id", () => {
-      return request
-        .get("/api/articles/1")
-        .expect(200)
-        .then(({
-          body
-        }) => {
-          expect(body.article).to.be.an("array");
-          expect(body.article[0].article_id).to.equal(1);
-          expect(body.article[0]).to.contains.keys(
-            "article_id",
-            "title",
-            "body",
-            "votes",
-            "topic",
-            "username",
-            "created_at"
-          );
-        });
-    });
+      // it('GET response status:400 and a bad request message', () => {
+      //   return request
+      //     .get('/api/3')
+      //     .expect(400)
+      //     .then(({
+      //       body,
+      //     }) => {
+      //       expect(body.message).to.equal('bad request');
+      //     });
+      // });
 
-    it("GET response status:200 and an array of comment objects for the article_id", () => {
-      return request
-        .get("/api/articles/1/comments")
-        .expect(200)
-        .then(({
-          body
-        }) => {
-          expect(body.comments).to.be.an("array");
-          expect(body.comments[0].article_id).to.equal(1);
-          expect(body.comments[0]).to.contains.keys(
-            "comment_id",
-            "username",
-            "article_id",
-            "votes",
-            "created_at",
-            "body"
-          );
-        });
-    });
+      // it('GET response status:404 and a not found message', () => {
+      //   return request
+      //     .get('/api/article-article')
+      //     .expect(404)
+      //     .then(({
+      //       body,
+      //     }) => {
+      //       expect(body.message).to.equal('not found');
+      //     });
+      // });
 
-    it("POST response status:201 and the new comment object", () => {
-      const newComment = {
-        body: "Thanks very much Newcastle United for making an awful Brexit day a wee bit better.",
-        username: "butter_bridge",
-      };
-      return request
-        .post("/api/articles/2/comments")
-        .send(newComment)
-        .expect(201)
-        .then(({
-          body
-        }) => {
-          expect(body.comment).to.be.an("array");
-          expect(body.comment[0].article_id).to.equal(2);
-          expect(body.comment[0]).to.contains.keys("comment_id",
-            "username",
-            "article_id",
-            "votes",
-            "created_at",
-            "body");
-        });
-    });
+    })
+
+    describe("fetchArticlesById()", () => {
+
+      it("GET response status:200 and an array of article objects for the article_id", () => {
+        return request
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.article).to.be.an("array");
+            expect(body.article[0].article_id).to.equal(1);
+            expect(body.article[0]).to.contains.keys(
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "username",
+              "created_at"
+            );
+          });
+      });
+
+    })
+
+    describe("updateArticle()", () => {});
+
+    describe("removeArticle()", () => {});
+
+    describe("fetchCommentsByArticleId()", () => {
+
+      it("GET response status:200 and an array of comment objects for the article_id", () => {
+        return request
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.comments).to.be.an("array");
+            expect(body.comments[0].article_id).to.equal(1);
+            expect(body.comments[0]).to.contains.keys(
+              "comment_id",
+              "username",
+              "article_id",
+              "votes",
+              "created_at",
+              "body"
+            );
+          });
+      })
+
+    })
+
+    describe("addNewComment()", () => {
+
+      it("POST response status:201 and the new comment object", () => {
+        const newComment = {
+          body: "Thanks very much Newcastle United for making an awful Brexit day a wee bit better.",
+          username: "butter_bridge",
+        };
+        return request
+          .post("/api/articles/2/comments")
+          .send(newComment)
+          .expect(201)
+          .then(({
+            body
+          }) => {
+            expect(body.comment).to.be.an("array");
+            expect(body.comment[0].article_id).to.equal(2);
+            expect(body.comment[0]).to.contains.keys("comment_id",
+              "username",
+              "article_id",
+              "votes",
+              "created_at",
+              "body");
+          });
+      });
+
+    })
+
+    describe("updateVote()", () => {});
+
+    describe("deleteComment()", () => {});
 
   });
 
@@ -389,45 +418,52 @@ describe("/api", () => {
   //                  //
 
   describe("/comments", () => {
-    it("GET response status:200 and an array of comment objects", () => {
-      return request
-        .get("/api/comments")
-        .expect(200)
-        .then(({
-          body
-        }) => {
-          expect(body.comments).to.be.an("array");
-          expect(body.comments[0]).to.contains.keys(
-            "comment_id",
-            "username",
-            "article_id",
-            "votes",
-            "created_at",
-            "body"
-          );
-        });
-    });
+
+    describe("getComments()", () => {
+
+      it("GET response status:200 and an array of comment objects", () => {
+        return request
+          .get("/api/comments")
+          .expect(200)
+          .then(({
+            body
+          }) => {
+            expect(body.comments).to.be.an("array");
+            expect(body.comments[0]).to.contains.keys(
+              "comment_id",
+              "username",
+              "article_id",
+              "votes",
+              "created_at",
+              "body"
+            );
+          });
+      });
+
+      // it('GET response status:400 and a bad request message', () => {
+      //   return request
+      //     .get('/api/3')
+      //     .expect(400)
+      //     .then(({
+      //       body,
+      //     }) => {
+      //       expect(body.message).to.equal('bad request');
+      //     });
+      // });
+
+      // it('GET response status:404 and a not found message', () => {
+      //   return request
+      //     .get('/api/comment-comment')
+      //     .expect(404)
+      //     .then(({
+      //       body,
+      //     }) => {
+      //       expect(body.message).to.equal('not found');
+      //     });
+      // });
+
+    })
+
   });
 
-  // it('GET response status:400 and a bad request message', () => {
-  //   return request
-  //     .get('/api/3')
-  //     .expect(400)
-  //     .then(({
-  //       body,
-  //     }) => {
-  //       expect(body.message).to.equal('bad request');
-  //     });
-  // });
-
-  // it('GET response status:404 and a not found message', () => {
-  //   return request
-  //     .get('/api/comment-comment')
-  //     .expect(404)
-  //     .then(({
-  //       body,
-  //     }) => {
-  //       expect(body.message).to.equal('not found');
-  //     });
-  // });
 });

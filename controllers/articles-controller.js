@@ -9,6 +9,7 @@ const {
   deleteComment,
 } = require('../db/models/articles-model');
 
+
 exports.getArticles = (req, res, next) => {
   fetchArticles()
     .then(articles => res.status(200).json({
@@ -56,7 +57,7 @@ exports.addCommentByArticleId = (req, res, next) => {
 
   addNewComment(req.body)
     .then(comment => res.status(201).json({
-      comment
+      comment,
     }))
     .catch(next)
 };

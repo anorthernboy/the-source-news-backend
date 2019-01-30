@@ -1,5 +1,6 @@
 const connection = require('../connection');
 
+
 exports.fetchUsers = () => {
   return connection('users')
     .select('*');
@@ -8,7 +9,7 @@ exports.fetchUsers = () => {
 exports.addNewUser = (user) => {
   return connection('users')
     .insert(user)
-    .returning('*')
+    .returning('*');
 };
 
 exports.fetchUserByUsername = (username) => {

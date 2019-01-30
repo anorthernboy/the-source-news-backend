@@ -5,13 +5,13 @@ const {
   addNewArticle,
 } = require("../db/models/topics-model");
 
+
 exports.getTopics = (req, res, next) => {
   fetchTopics()
     .then(topics =>
       res.status(200).json({
-        topics
-      })
-    )
+        topics,
+      }))
     .catch(next);
 };
 
@@ -36,14 +36,14 @@ exports.getArticlesByTopic = (req, res, next) => {
 
 exports.addArticleByTopic = (req, res, next) => {
   const {
-    topic
+    topic,
   } = req.params;
 
   req.body.topic = topic;
 
   addNewArticle(req.body)
     .then(article => res.status(201).json({
-      article
+      article,
     }))
     .catch(next);
 };

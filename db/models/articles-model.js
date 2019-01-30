@@ -1,5 +1,6 @@
 const connection = require('../connection');
 
+
 exports.fetchArticles = () => {
   return connection('articles')
     .select('*');
@@ -28,7 +29,7 @@ exports.fetchCommentsByArticleId = (article_id) => {
 exports.addNewComment = (comment) => {
   return connection('comments')
     .insert(comment)
-    .returning('*')
+    .returning('*');
 };
 
 // exports.updateVote = () => {

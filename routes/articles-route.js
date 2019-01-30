@@ -11,6 +11,7 @@ const {
   deleteArticleCommentByCommentId,
 } = require('../controllers/articles-controller');
 
+
 router.get('/', getArticles);
 
 router.get('/:article_id', getArticlesById);
@@ -21,10 +22,11 @@ router.get('/:article_id', getArticlesById);
 
 router.get('/:article_id/comments', getCommentsByArticleId);
 
-router.post('/:article_id/comments', addCommentByArticleId)
+router.post('/:article_id/comments', addCommentByArticleId);
 
-// router.patch('/:article_id/comments/:comment_id', patchArticleCommentVoteByCommentId)
+// router.patch('/:article_id/comments/:comment_id', patchArticleCommentVoteByCommentId);
 
-// router.delete('/:article_id/comments/:comment_id', deleteArticleCommentByCommentId)
+// router.delete('/:article_id/comments/:comment_id', deleteArticleCommentByCommentId);
+
 
 module.exports = router;

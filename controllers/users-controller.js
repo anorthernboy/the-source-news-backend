@@ -5,10 +5,11 @@ const {
   fetchArticlesByUsername,
 } = require('../db/models/users-model');
 
+
 exports.getUsers = (req, res, next) => {
   fetchUsers()
     .then(users => res.status(200).json({
-      users
+      users,
     }))
     .catch(next);
 };
@@ -36,7 +37,9 @@ exports.getArticlesByUsername = (req, res, next) => {
   const {
     username,
   } = req.params;
-  fetchArticlesByUsername(username).then(articles => res.status(200).json({
-    articles,
-  })).catch(next);
+  fetchArticlesByUsername(username)
+    .then(articles => res.status(200).json({
+      articles,
+    }))
+    .catch(next);
 };

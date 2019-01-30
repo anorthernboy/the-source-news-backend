@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon listen.js",
-    "test": "npm run setup:db && mocha spec/*",
+    "test": "npm run setup:db && mocha spec/*.spec.js",
     "lint": "eslint ./",
     "pre-commit": "npm t",
     "posttest": "npm run lint",
