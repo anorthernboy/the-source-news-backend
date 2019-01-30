@@ -11,6 +11,14 @@ exports.fetchArticlesById = (article_id) => {
     .where('articles.article_id', article_id);
 };
 
+// exports.updateArticle = () => {
+
+// };
+
+// exports.removeArticle = () => {
+
+// };
+
 exports.fetchCommentsByArticleId = (article_id) => {
   return connection('comments')
     .select('*')
@@ -22,3 +30,11 @@ exports.addNewComment = (comment) => {
     .insert(comment)
     .returning('*')
 };
+
+// exports.updateVote = () => {
+
+// };
+
+// exports.deleteComment = () => {
+
+// };

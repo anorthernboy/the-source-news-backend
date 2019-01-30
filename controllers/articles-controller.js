@@ -1,8 +1,12 @@
 const {
   fetchArticles,
   fetchArticlesById,
+  updateArticle,
+  removeArticle,
   fetchCommentsByArticleId,
   addNewComment,
+  updateVote,
+  deleteComment,
 } = require('../db/models/articles-model');
 
 exports.getArticles = (req, res, next) => {
@@ -23,6 +27,14 @@ exports.getArticlesById = (req, res, next) => {
     }))
     .catch(next);
 };
+
+// exports.patchArticleById = (req, res, next) => {
+//   updateArticle().then().catch(next);
+// };
+
+// exports.deleteArticleById = (req, res, next) => {
+//   removeArticle().then().catch(next);
+// };
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const {
@@ -48,3 +60,11 @@ exports.addCommentByArticleId = (req, res, next) => {
     }))
     .catch(next)
 };
+
+// exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
+//   updateVote().then().catch();
+// };
+
+// exports.deleteArticleCommentByCommentId = (req, res, next) => {
+//   deleteComment().then().catch(next);
+// };

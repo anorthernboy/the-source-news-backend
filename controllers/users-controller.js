@@ -1,14 +1,22 @@
 const {
   fetchUsers,
+  addNewUser,
   fetchUserByUsername,
   fetchArticlesByUsername,
-  addNewUser,
 } = require('../db/models/users-model');
 
 exports.getUsers = (req, res, next) => {
   fetchUsers()
     .then(users => res.status(200).json({
       users
+    }))
+    .catch(next);
+};
+
+exports.addUser = (req, res, next) => {
+  addNewUser(req.body)
+    .then(user => res.status(201).json({
+      user,
     }))
     .catch(next);
 };
@@ -31,12 +39,4 @@ exports.getArticlesByUsername = (req, res, next) => {
   fetchArticlesByUsername(username).then(articles => res.status(200).json({
     articles,
   })).catch(next);
-};
-
-exports.addUser = (req, res, next) => {
-  addNewUser(req.body)
-    .then(user => res.status(201).json({
-      user,
-    }))
-    .catch(next);
 };

@@ -5,6 +5,12 @@ exports.fetchUsers = () => {
     .select('*');
 };
 
+exports.addNewUser = (user) => {
+  return connection('users')
+    .insert(user)
+    .returning('*')
+};
+
 exports.fetchUserByUsername = (username) => {
   return connection('users')
     .select('*')
@@ -15,10 +21,4 @@ exports.fetchArticlesByUsername = (username) => {
   return connection('articles')
     .select('*')
     .where('articles.username', username);
-};
-
-exports.addNewUser = (user) => {
-  return connection('users')
-    .insert(user)
-    .returning('*')
 };
