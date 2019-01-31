@@ -34,8 +34,12 @@ exports.getUserByUsername = (req, res, next) => {
           message: 'not found',
         });
       }
+      const displayUser = user.reduce((acc, curr) => {
+        acc = curr;
+        return acc;
+      }, {});
       return res.status(200).json({
-        user,
+        displayUser,
       });
     })
     .catch(next);
@@ -58,8 +62,15 @@ exports.getArticlesByUsername = (req, res, next) => {
           message: 'not found',
         });
       }
+      const displayArticles = articles.reduce((acc, curr) => {
+        acc.articles.push(curr);
+        return acc;
+      }, {
+        total_count: articles.length,
+        articles: [],
+      });
       return res.status(200).json({
-        articles,
+        displayArticles,
       });
     })
     .catch(next);

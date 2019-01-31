@@ -48,7 +48,6 @@ exports.formatArticles = (articleData, topicRef, userRef) => {
       created_at,
       ...restOfArticle
     } = article;
-
     return {
       topic: topicRef[topic],
       username: userRef[created_by],
@@ -72,7 +71,6 @@ exports.formatComments = (commentData, userRef, articleRef) => {
       created_at,
       ...restOfComment
     } = comment;
-
     return {
       username: userRef[created_by],
       article_id: articleRef[belongs_to],

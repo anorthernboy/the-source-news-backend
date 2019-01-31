@@ -25,7 +25,6 @@ exports.getArticles = (req, res, next) => {
         total_count: articles.length,
         articles: [],
       });
-
       res.status(200).json({
         displayArticles,
       });
@@ -45,12 +44,10 @@ exports.getArticlesById = (req, res, next) => {
           message: 'not found',
         });
       }
-
       const displayArticle = article.reduce((acc, curr) => {
         acc = curr;
         return acc;
       }, {});
-
       return res.status(200).json({
         displayArticle,
       });
@@ -62,11 +59,9 @@ exports.patchArticleById = (req, res, next) => {
   const {
     article_id,
   } = req.params;
-
   const {
     inc_votes,
   } = req.body;
-
   updateArticle(article_id, inc_votes)
     .then(article => res.status(200).json({
       article,
@@ -113,9 +108,7 @@ exports.addCommentByArticleId = (req, res, next) => {
   const {
     article_id,
   } = req.params;
-
   req.body.article_id = article_id;
-
   addNewComment(req.body)
     .then(comment => res.status(201).json({
       comment,
@@ -128,11 +121,9 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
     article_id,
     comment_id,
   } = req.params;
-
   const {
     inc_votes,
   } = req.body;
-
   updateVote(article_id, comment_id, inc_votes)
     .then(comment => res.status(200).json({
       comment,

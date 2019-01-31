@@ -12,6 +12,7 @@ const {
   formatComments,
 } = require('../utils/index');
 
+
 exports.seed = function (connection, Promise) {
   return connection.migrate.rollback()
     .then(() => connection.migrate.latest())

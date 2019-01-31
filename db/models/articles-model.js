@@ -16,10 +16,6 @@ exports.fetchArticlesById = article_id => connection('articles')
   .groupBy('articles.article_id')
   .where('articles.article_id', article_id);
 
-// exports.fetchArticlesById = article_id => connection('articles')
-//   .select('*')
-//   .where('articles.article_id', article_id);
-
 exports.updateArticle = (article_id, inc_votes) => connection('articles')
   .where('article_id', article_id)
   .update({
@@ -32,7 +28,7 @@ exports.removeArticle = article_id => connection('articles')
   .del();
 
 exports.fetchCommentsByArticleId = (article_id, limit = 10, sort_by = 'comments.created_at', order = 'DESC') => connection('comments')
-  .select('*')
+  .select('comments.comment_id', 'comments.username', 'comments.votes', 'comments.created_at', 'comments.body')
   .limit(limit)
   .orderBy(sort_by, order)
   .where('comments.article_id', article_id);

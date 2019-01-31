@@ -31,9 +31,11 @@ describe('/utils', () => {
     it('returns an empty object for an empty array', () => {
       expect(createRef([], 'col1')).to.eql({});
     });
+
     it('returns an empty object when less than no column parameter passed', () => {
       expect(createRef([1, 2, 3, 4])).to.eql({});
     });
+
     it('returns correct object when all parameters passed', () => {
       expect(createRef([{
         article_id: 1,
@@ -56,10 +58,12 @@ describe('/utils', () => {
     it('returns an empty object for an empty array', () => {
       expect(createArticleRef([], 'col1', 'col2')).to.eql({});
     });
+
     it('returns an empty object when less than two column parameters passed', () => {
       expect(createArticleRef([1, 2, 3, 4])).to.eql({});
       expect(createArticleRef([1, 2, 3, 4], 'col1')).to.eql({});
     });
+
     it('returns correct object when all parameters passed', () => {
       expect(createArticleRef([{
         article_id: 1,
@@ -82,9 +86,11 @@ describe('/utils', () => {
     it('returns the correct date for timestamp', () => {
       expect(createTime(998976548899)).to.equal('Tue Aug 28 2001');
     });
+
     it('returns the "invalid date" for out of range timestamp', () => {
       expect(createTime(11111111111111111111)).to.equal('Invalid Date');
     });
+
     it('returns the Unix Epoch for negative timestamp', () => {
       expect(createTime(-24567)).to.equal('Thu Jan 01 1970');
     });
@@ -455,9 +461,9 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.user).to.be.an('array');
-          expect(body.user[0].username).to.equal('butter_bridge');
-          expect(body.user[0]).to.contains.keys(
+          expect(body.displayUser).to.be.an('object');
+          expect(body.displayUser.username).to.equal('butter_bridge');
+          expect(body.displayUser).to.contains.keys(
             'username',
             'name',
             'avatar_url',
@@ -481,16 +487,18 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles[0].username).to.equal('butter_bridge');
-          expect(body.articles[0]).to.contains.keys(
+          expect(body.displayArticles).to.be.an('object');
+          expect(body.displayArticles).to.contains.keys('total_count', 'articles');
+          expect(body.displayArticles.articles).to.be.an('array');
+          expect(body.displayArticles.articles[0].username).to.equal('butter_bridge');
+          expect(body.displayArticles.articles[0]).to.contains.keys(
             'article_id',
             'title',
-            'body',
             'votes',
             'topic',
             'username',
             'created_at',
+            'comment_count',
           );
         }));
 
@@ -500,8 +508,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles).to.have.length(5);
+          expect(body.displayArticles.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 2 article objects for the username [QUERY CASE]', () => request
@@ -510,8 +517,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles).to.have.length(2);
+          expect(body.displayArticles.articles).to.have.length(2);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -520,9 +526,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles).to.have.length(5);
-          expect(body.articles[0].username).to.equal(
+          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.displayArticles.articles[0].username).to.equal(
             'icellusedkars',
           );
         }));
@@ -533,9 +538,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles).to.have.length(5);
-          expect(body.articles[0].title).to.equal('Z');
+          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.displayArticles.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -544,9 +548,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles).to.have.length(5);
-          expect(body.articles[0].title).to.equal('Am I a cat?');
+          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.displayArticles.articles[0].title).to.equal('Am I a cat?');
         }));
 
       it('GET ERR response status:404 and a not found message for username which does not exist', () => request
@@ -641,7 +644,7 @@ describe('/api', () => {
         }));
     });
 
-    describe.only('getArticlesById()', () => {
+    describe('getArticlesById()', () => {
       it('GET response status:200 and an array of article objects for the article_id', () => request
         .get('/api/articles/1')
         .expect(200)
@@ -715,11 +718,9 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.comments).to.be.an('array');
-          expect(body.comments[0].article_id).to.equal(1);
           expect(body.comments[0]).to.contains.keys(
             'comment_id',
             'username',
-            'article_id',
             'votes',
             'created_at',
             'body',
@@ -732,7 +733,6 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.comments).to.be.an('array');
           expect(body.comments).to.have.length(10);
         }));
 
@@ -742,7 +742,6 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.comments).to.be.an('array');
           expect(body.comments).to.have.length(5);
         }));
 
@@ -752,7 +751,6 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.comments).to.be.an('array');
           expect(body.comments).to.have.length(10);
           expect(body.comments[0].username).to.equal(
             'butter_bridge',
@@ -765,7 +763,6 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.comments).to.be.an('array');
           expect(body.comments).to.have.length(10);
           expect(body.comments[0].username).to.equal('icellusedkars');
         }));
@@ -776,7 +773,6 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.comments).to.be.an('array');
           expect(body.comments).to.have.length(10);
           expect(body.comments[0].username).to.equal('butter_bridge');
         }));
