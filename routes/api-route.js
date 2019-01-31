@@ -8,6 +8,12 @@ const articlesRouter = require('./articles-route');
 
 const commentsRouter = require('./comments-route');
 
+const {
+  getEndpoints,
+} = require('../controllers/api-controller');
+
+
+router.get('/', getEndpoints);
 
 router.use('/topics', topicsRouter);
 

@@ -18,9 +18,7 @@ exports.fetchArticlesById = article_id => connection('articles')
 
 exports.updateArticle = (article_id, inc_votes) => connection('articles')
   .where('article_id', article_id)
-  .update({
-    votes: inc_votes,
-  })
+  .increment('votes', inc_votes)
   .returning('*');
 
 exports.removeArticle = article_id => connection('articles')
@@ -40,9 +38,7 @@ exports.addNewComment = comment => connection('comments')
 exports.updateVote = (article_id, comment_id, inc_votes) => connection('comments')
   .where('article_id', article_id)
   .andWhere('comment_id', comment_id)
-  .update({
-    votes: inc_votes,
-  })
+  .increment('votes', inc_votes)
   .returning('*');
 
 exports.removeComment = (article_id, comment_id) => connection('comments')

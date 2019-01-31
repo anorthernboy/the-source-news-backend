@@ -16,7 +16,7 @@ router.get('/', getArticles);
 
 router.get('/:article_id', getArticlesById);
 
-router.put('/:article_id', patchArticleById);
+router.patch('/:article_id', patchArticleById);
 
 router.delete('/:article_id', deleteArticleById);
 
@@ -24,7 +24,7 @@ router.get('/:article_id/comments', getCommentsByArticleId);
 
 router.post('/:article_id/comments', addCommentByArticleId);
 
-router.put('/:article_id/comments/:comment_id', patchArticleCommentVoteByCommentId);
+router.patch('/:article_id/comments/:comment_id', patchArticleCommentVoteByCommentId);
 
 router.delete('/:article_id/comments/:comment_id', deleteArticleCommentByCommentId);
 

@@ -254,6 +254,17 @@ describe('/api', () => {
   // after each mocha hook ensure connection is not left hanging
   after(() => connection.destroy());
 
+  describe('', () => {
+    it('returns JSON describing the available endpoints on your API', () => request
+      .get('/api')
+      .expect(200)
+      .then(({
+        body,
+      }) => {
+        expect(body).to.be.an('object');
+        expect(body).to.contains.keys('nc_knews');
+      }));
+  });
   //                  //
   //                  //
   //  TOPICS ROUTER   //
@@ -289,6 +300,22 @@ describe('/api', () => {
             expect(body.topic).to.be.an('array');
             expect(body.topic[0].slug).to.equal('joystick');
             expect(body.topic[0]).to.contains.keys('description', 'slug');
+          });
+      });
+
+      it('POST ERR response status:400 and bad request message', () => {
+        const newTopic = {
+          slug: 'mitch',
+          description: 'wreck pastel slip snail meadow upset consumption',
+        };
+        return request
+          .post('/api/topics')
+          .send(newTopic)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
           });
       });
     });
@@ -679,20 +706,46 @@ describe('/api', () => {
     describe('patchArticleById()', () => {
       // only works where votes starting value is 0 at the moment
 
-      it('PUT response status:200 and an updated article object for the article_id', () => {
+      it('PATCH response status:200 and an updated article object for the article_id when given a positive vote', () => {
         const updateArticle = {
           inc_votes: 10,
         };
         return request
-          .put('/api/articles/2')
+          .patch('/api/articles/1')
           .send(updateArticle)
           .expect(200)
           .then(({
             body,
           }) => {
             expect(body.article).to.be.an('array');
-            expect(body.article[0].article_id).to.equal(2);
-            expect(body.article[0].votes).to.equal(10);
+            expect(body.article[0].article_id).to.equal(1);
+            expect(body.article[0].votes).to.equal(110);
+            expect(body.article[0]).to.contains.keys(
+              'article_id',
+              'title',
+              'body',
+              'votes',
+              'topic',
+              'username',
+              'created_at',
+            );
+          });
+      });
+
+      it('PATCH response status:200 and an updated article object for the article_id when given a negative vote', () => {
+        const updateArticle = {
+          inc_votes: -10,
+        };
+        return request
+          .patch('/api/articles/1')
+          .send(updateArticle)
+          .expect(200)
+          .then(({
+            body,
+          }) => {
+            expect(body.article).to.be.an('array');
+            expect(body.article[0].article_id).to.equal(1);
+            expect(body.article[0].votes).to.equal(90);
             expect(body.article[0]).to.contains.keys(
               'article_id',
               'title',
@@ -815,22 +868,47 @@ describe('/api', () => {
     });
 
     describe('patchArticleCommentVoteByCommentId()', () => {
-      // only works where votes starting value is 0 at the moment
-
-      it('PUT response status:200 and an updated comment object for the comment_id', () => {
+      it('PATCH response status:200 and an updated comment object for the comment_id for a positive vote', () => {
         const updateComment = {
           inc_votes: 10,
         };
         return request
-          .put('/api/articles/1/comments/5')
+          .patch('/api/articles/9/comments/1')
           .send(updateComment)
           .expect(200)
           .then(({
             body,
           }) => {
             expect(body.comment).to.be.an('array');
-            expect(body.comment[0].comment_id).to.equal(5);
-            expect(body.comment[0].votes).to.equal(10);
+            expect(body.comment[0].comment_id).to.equal(1);
+            expect(body.comment[0].article_id).to.equal(9);
+            expect(body.comment[0].votes).to.equal(26);
+            expect(body.comment[0]).to.contains.keys(
+              'comment_id',
+              'username',
+              'article_id',
+              'votes',
+              'created_at',
+              'body',
+            );
+          });
+      });
+
+      it('PATCH response status:200 and an updated comment object for the comment_id for a negative vote', () => {
+        const updateComment = {
+          inc_votes: -10,
+        };
+        return request
+          .patch('/api/articles/9/comments/1')
+          .send(updateComment)
+          .expect(200)
+          .then(({
+            body,
+          }) => {
+            expect(body.comment).to.be.an('array');
+            expect(body.comment[0].comment_id).to.equal(1);
+            expect(body.comment[0].article_id).to.equal(9);
+            expect(body.comment[0].votes).to.equal(6);
             expect(body.comment[0]).to.contains.keys(
               'comment_id',
               'username',
