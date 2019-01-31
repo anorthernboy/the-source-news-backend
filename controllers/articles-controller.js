@@ -17,9 +17,19 @@ exports.getArticles = (req, res, next) => {
     order,
   } = req.query;
   fetchArticles(limit, sort_by, order)
-    .then(articles => res.status(200).json({
-      articles,
-    }))
+    .then((articles) => {
+      const displayArticles = articles.reduce((acc, curr) => {
+        acc.articles.push(curr);
+        return acc;
+      }, {
+        total_count: articles.length,
+        articles: [],
+      });
+
+      res.status(200).json({
+        displayArticles,
+      });
+    })
     .catch(next);
 };
 
@@ -35,8 +45,14 @@ exports.getArticlesById = (req, res, next) => {
           message: 'not found',
         });
       }
+
+      const displayArticle = article.reduce((acc, curr) => {
+        acc = curr;
+        return acc;
+      }, {});
+
       return res.status(200).json({
-        article,
+        displayArticle,
       });
     })
     .catch(next);

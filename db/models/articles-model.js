@@ -2,13 +2,23 @@ const connection = require('../connection');
 
 
 exports.fetchArticles = (limit = 10, sort_by = 'articles.created_at', order = 'DESC') => connection('articles')
-  .select('*')
+  .select('articles.username', 'articles.title', 'articles.article_id', 'articles.body', 'articles.votes', 'articles.created_at', 'articles.topic')
+  .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+  .count('comments.article_id as comment_count')
+  .groupBy('articles.article_id')
   .limit(limit)
   .orderBy(sort_by, order);
 
 exports.fetchArticlesById = article_id => connection('articles')
-  .select('*')
+  .select('articles.article_id', 'articles.username', 'articles.title', 'articles.votes', 'articles.body', 'articles.created_at', 'articles.topic')
+  .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+  .count('comments.article_id as comment_count')
+  .groupBy('articles.article_id')
   .where('articles.article_id', article_id);
+
+// exports.fetchArticlesById = article_id => connection('articles')
+//   .select('*')
+//   .where('articles.article_id', article_id);
 
 exports.updateArticle = (article_id, inc_votes) => connection('articles')
   .where('article_id', article_id)

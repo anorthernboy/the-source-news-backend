@@ -1,20 +1,19 @@
 \c
 craig_nc_knews_test;
 
-SELECT articles.title, articles.topic, articles.username, articles.created_at
-FROM articles
-  LEFT JOIN users
-  ON articles.username = users.username
-WHERE articles
-.username = 'icellusedkars'
-ORDER BY articles.created_at ASC
-LIMIT 10
-;
+SELECT *
+FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id;
+--   LEFT JOIN comments
+--   ON articles.article_id = comments.article_id
+-- WHERE articles
+-- .topic = 'mitch'
+-- ORDER BY articles.created_at DESC
+-- LIMIT 10;
 
 
--- SELECT topics.slug, topics.description, COUNT(articles.topic)
--- FROM topics
---   JOIN articles
---   ON topics.slug = articles.topic
--- GROUP BY topics.slug
--- ORDER BY topics.slug DESC;
+-- SELECT articles.username, articles.title, articles.article_id, articles.votes, COUNT(comments.article_id) AS comment_count, articles.created_at, articles.topic
+-- FROM articles
+--   JOIN comments
+--   ON articles.article_id = comments.article_id
+-- GROUP BY articles.topic
+-- ORDER BY articles.created_at DESC;

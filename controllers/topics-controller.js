@@ -31,6 +31,7 @@ exports.getArticlesByTopic = (req, res, next) => {
     sort_by,
     order,
   } = req.query;
+
   fetchArticlesByTopic(topic, limit, sort_by, order)
     .then((articles) => {
       if (articles.length === 0) {
@@ -39,8 +40,17 @@ exports.getArticlesByTopic = (req, res, next) => {
           message: 'not found',
         });
       }
+
+      const displayArticles = articles.reduce((acc, curr) => {
+        acc.articles.push(curr);
+        return acc;
+      }, {
+        total_count: articles.length,
+        articles: [],
+      });
+
       return res.status(200).json({
-        articles,
+        displayArticles,
       });
     })
     .catch(next);
