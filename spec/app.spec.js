@@ -20,6 +20,12 @@ const {
   formatComments,
 } = require('../db/utils/index');
 
+//                  //
+//                  //
+//  UTILS TESTING   //
+//                  //
+//                  //
+
 describe('/utils', () => {
   describe('/createRef()', () => {
     it('returns an empty object for an empty array', () => {
@@ -259,28 +265,6 @@ describe('/api', () => {
           expect(body.topics).to.be.an('array');
           expect(body.topics[0]).to.contains.keys('description', 'slug');
         }));
-
-      // it('GET response status:400 and a bad request message', () => {
-      //   return request
-      //     .get('/api/3')
-      //     .expect(400)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('bad request');
-      //     });
-      // });
-
-      // it('GET response status:404 and a not found message', () => {
-      //   return request
-      //     .get('/api/topic-topic')
-      //     .expect(404)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('not found');
-      //     });
-      // });
     });
 
     describe('addTopic()', () => {
@@ -377,6 +361,15 @@ describe('/api', () => {
           expect(body.articles).to.have.length(10);
           expect(body.articles[0].title).to.equal('Moustache');
         }));
+
+      it('GET ERR response status:404 and a not found message for topic which does not exist', () => request
+        .get('/api/topics/western_playland/articles')
+        .expect(404)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('not found');
+        }));
     });
 
     describe('addArticleByTopic()', () => {
@@ -430,28 +423,6 @@ describe('/api', () => {
             'avatar_url',
           );
         }));
-
-      // it('GET response status:400 and a bad request message', () => {
-      //   return request
-      //     .get('/api/3')
-      //     .expect(400)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('bad request');
-      //     });
-      // });
-
-      // it('GET response status:404 and a not found message', () => {
-      //   return request
-      //     .get('/api/user-user')
-      //     .expect(404)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('not found');
-      //     });
-      // });
     });
 
     describe('addUser()', () => {
@@ -493,6 +464,15 @@ describe('/api', () => {
             'name',
             'avatar_url',
           );
+        }));
+
+      it('GET ERR response status:404 and a not found message for username which does not exist', () => request
+        .get('/api/users/chemical_genius')
+        .expect(404)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('not found');
         }));
     });
 
@@ -570,6 +550,15 @@ describe('/api', () => {
           expect(body.articles).to.have.length(5);
           expect(body.articles[0].title).to.equal('Am I a cat?');
         }));
+
+      it('GET ERR response status:404 and a not found message for username which does not exist', () => request
+        .get('/api/users/chemical_genius/articles')
+        .expect(404)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('not found');
+        }));
     });
   });
 
@@ -598,28 +587,6 @@ describe('/api', () => {
             'created_at',
           );
         }));
-
-      // it('GET response status:400 and a bad request message', () => {
-      //   return request
-      //     .get('/api/3')
-      //     .expect(400)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('bad request');
-      //     });
-      // });
-
-      // it('GET response status:404 and a not found message', () => {
-      //   return request
-      //     .get('/api/article-article')
-      //     .expect(404)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('not found');
-      //     });
-      // });
 
       it('GET response status:200 and an array of 10 article objects for the topic [DEFAULT CASE]', () => request
         .get('/api/articles')
@@ -695,6 +662,15 @@ describe('/api', () => {
             'username',
             'created_at',
           );
+        }));
+
+      it('GET ERR response status:404 and a not found message for article_id which does not exist', () => request
+        .get('/api/articles/1000000')
+        .expect(404)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('not found');
         }));
     });
 
@@ -805,6 +781,15 @@ describe('/api', () => {
           expect(body.comments).to.have.length(10);
           expect(body.comments[0].username).to.equal('butter_bridge');
         }));
+
+      it('GET ERR response status:404 and a not found message for article_id which does not exist', () => request
+        .get('/api/articles/1000000/comments')
+        .expect(404)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('not found');
+        }));
     });
 
     describe('addCommentByArticleId()', () => {
@@ -892,28 +877,6 @@ describe('/api', () => {
             'body',
           );
         }));
-
-      // it('GET response status:400 and a bad request message', () => {
-      //   return request
-      //     .get('/api/3')
-      //     .expect(400)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('bad request');
-      //     });
-      // });
-
-      // it('GET response status:404 and a not found message', () => {
-      //   return request
-      //     .get('/api/comment-comment')
-      //     .expect(404)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.message).to.equal('not found');
-      //     });
-      // });
     });
   });
 });

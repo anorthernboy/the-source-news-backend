@@ -28,9 +28,17 @@ exports.getArticlesById = (req, res, next) => {
     article_id,
   } = req.params;
   fetchArticlesById(article_id)
-    .then(article => res.status(200).json({
-      article,
-    }))
+    .then((article) => {
+      if (article.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: 'not found',
+        });
+      }
+      return res.status(200).json({
+        article,
+      });
+    })
     .catch(next);
 };
 
@@ -71,9 +79,17 @@ exports.getCommentsByArticleId = (req, res, next) => {
     sort_ascending,
   } = req.query;
   fetchCommentsByArticleId(article_id, limit, sort_by, sort_ascending)
-    .then(comments => res.status(200).json({
-      comments,
-    }))
+    .then((comments) => {
+      if (comments.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: 'not found',
+        });
+      }
+      return res.status(200).json({
+        comments,
+      });
+    })
     .catch(next);
 };
 

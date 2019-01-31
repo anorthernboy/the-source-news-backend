@@ -8,7 +8,6 @@ const articlesRouter = require('./articles-route');
 
 const commentsRouter = require('./comments-route');
 
-
 router.use('/topics', topicsRouter);
 
 router.use('/users', usersRouter);

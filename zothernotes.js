@@ -91,3 +91,26 @@
 //     expect(body.topics[0].name).to.equal('mitch');
 //     expect(body.topics[0].article_count).to.equal('11');
 //   }));
+
+
+// ERRORS
+// in controller
+
+// then([mp]) <-- destructure from the returned array
+// if(!mp) return Promise.reject({status: 404, message: 'not found'})
+// next(err)
+
+// in errors
+
+// if err.status === 404 then res.status(404).json({mesg : err.message})
+// else next()err
+
+// const {code} = err
+// const errCodes400 = {
+// error codes from knex
+// 22P02: 'invalid input syntax for integer'
+// }
+
+// /if (errorCodes400[code]) res.status(400).json({msg: errorCodes400[code]})
+
+// for post errors 'client uses malformed body, missing property' send a wrong body

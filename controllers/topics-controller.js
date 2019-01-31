@@ -32,9 +32,17 @@ exports.getArticlesByTopic = (req, res, next) => {
     order,
   } = req.query;
   fetchArticlesByTopic(topic, limit, sort_by, order)
-    .then(articles => res.status(200).json({
-      articles,
-    }))
+    .then((articles) => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: 'not found',
+        });
+      }
+      return res.status(200).json({
+        articles,
+      });
+    })
     .catch(next);
 };
 

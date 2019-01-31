@@ -27,9 +27,17 @@ exports.getUserByUsername = (req, res, next) => {
     username,
   } = req.params;
   fetchUserByUsername(username)
-    .then(user => res.status(200).json({
-      user,
-    }))
+    .then((user) => {
+      if (user.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: 'not found',
+        });
+      }
+      return res.status(200).json({
+        user,
+      });
+    })
     .catch(next);
 };
 
@@ -43,8 +51,16 @@ exports.getArticlesByUsername = (req, res, next) => {
     order,
   } = req.query;
   fetchArticlesByUsername(username, limit, sort_by, order)
-    .then(articles => res.status(200).json({
-      articles,
-    }))
+    .then((articles) => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: 'not found',
+        });
+      }
+      return res.status(200).json({
+        articles,
+      });
+    })
     .catch(next);
 };
