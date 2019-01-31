@@ -1,12 +1,33 @@
-exports.createRef = (arr, column) => arr.reduce((acc, curr) => {
-  acc[curr[column]] = curr[column];
-  return acc;
-}, {});
+exports.createRef = (arr, column) => {
+  if (arr.length === 0) {
+    return {};
+  }
+  if (!column) {
+    return {};
+  }
+  return arr.reduce((acc, curr) => {
+    acc[curr[column]] = curr[column];
+    return acc;
+  }, {});
+};
 
-exports.createArticleRef = (arr, col1, col2) => arr.reduce((acc, curr) => {
-  acc[curr[col1]] = curr[col2];
-  return acc;
-}, {});
+exports.createArticleRef = (arr, col1, col2) => {
+  if (arr.length === 0) {
+    return {};
+  }
+  if (!col1 || !col2) {
+    return {};
+  }
+  return arr.reduce((acc, curr) => {
+    acc[curr[col1]] = curr[col2];
+    return acc;
+  }, {});
+};
+
+exports.createTime = (num) => {
+  const numDate = new Date(num);
+  return numDate.toDateString();
+};
 
 const createTime = (num) => {
   const numDate = new Date(num);

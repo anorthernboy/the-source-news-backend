@@ -12,6 +12,91 @@ const request = supertest(app);
 
 const connection = require('../db/connection');
 
+const {
+  createRef,
+  createArticleRef,
+  createTime,
+  formatArticles,
+  formatComments,
+} = require('../db/utils/index');
+
+describe('/utils', () => {
+  describe('/createRef()', () => {
+    it('returns an empty object for an empty array', () => {
+      expect(createRef([], 'col1')).to.eql({});
+    });
+    it('returns an empty object when less than no column parameter passed', () => {
+      expect(createRef([1, 2, 3, 4])).to.eql({});
+    });
+    it('returns correct object when all parameters passed', () => {
+      expect(createRef([{
+        article_id: 1,
+        title: 'The vegan carnivore?',
+      }, {
+        article_id: 2,
+        title: 'Meat is murder!',
+      }, {
+        article_id: 3,
+        title: 'Bring home the beans!',
+      }], 'title')).to.eql({
+        'Bring home the beans!': 'Bring home the beans!',
+        'Meat is murder!': 'Meat is murder!',
+        'The vegan carnivore?': 'The vegan carnivore?',
+      });
+    });
+  });
+
+  describe('/createArticleRef()', () => {
+    it('returns an empty object for an empty array', () => {
+      expect(createArticleRef([], 'col1', 'col2')).to.eql({});
+    });
+    it('returns an empty object when less than two column parameters passed', () => {
+      expect(createArticleRef([1, 2, 3, 4])).to.eql({});
+      expect(createArticleRef([1, 2, 3, 4], 'col1')).to.eql({});
+    });
+    it('returns correct object when all parameters passed', () => {
+      expect(createArticleRef([{
+        article_id: 1,
+        title: 'The vegan carnivore?',
+      }, {
+        article_id: 2,
+        title: 'Meat is murder!',
+      }, {
+        article_id: 3,
+        title: 'Bring home the beans!',
+      }], 'title', 'article_id')).to.eql({
+        'Bring home the beans!': 3,
+        'Meat is murder!': 2,
+        'The vegan carnivore?': 1,
+      });
+    });
+  });
+
+  describe('/createTime()', () => {
+    it('returns the correct date for timestamp', () => {
+      expect(createTime(998976548899)).to.equal('Tue Aug 28 2001');
+    });
+    it('returns the "invalid date" for out of range timestamp', () => {
+      expect(createTime(11111111111111111111)).to.equal('Invalid Date');
+    });
+    it('returns the Unix Epoch for negative timestamp', () => {
+      expect(createTime(-24567)).to.equal('Thu Jan 01 1970');
+    });
+  });
+
+  describe('/formatArticles()', () => {
+    it('does something...', () => {
+      expect(formatArticles()).to.eql();
+    });
+  });
+
+  describe('/formatComments()', () => {
+    it('does something...', () => {
+      expect(formatComments()).to.eql();
+    });
+  });
+});
+
 describe('/api', () => {
   // before each mocha hook ensure database is stripped down and built up
   beforeEach(() => connection.migrate
@@ -296,25 +381,6 @@ describe('/api', () => {
           );
         }));
 
-      it('GET response status:200 and an array of article objects for the username', () => request
-        .get('/api/users/butter_bridge/articles')
-        .expect(200)
-        .then(({
-          body,
-        }) => {
-          expect(body.articles).to.be.an('array');
-          expect(body.articles[0].article_id).to.equal(1);
-          expect(body.articles[0]).to.contains.keys(
-            'article_id',
-            'title',
-            'body',
-            'votes',
-            'topic',
-            'username',
-            'created_at',
-          );
-        }));
-
       it('GET response status:200 and an array of 5 article objects for the username [DEFAULT CASE]', () => request
         .get('/api/users/icellusedkars/articles')
         .expect(200)
@@ -540,24 +606,6 @@ describe('/api', () => {
         }) => {
           expect(body.comments).to.be.an('array');
           expect(body.comments[0].article_id).to.equal(1);
-          expect(body.comments[0]).to.contains.keys(
-            'comment_id',
-            'username',
-            'article_id',
-            'votes',
-            'created_at',
-            'body',
-          );
-        }));
-
-      it('GET response status:200 and an array of comment objects for the article_id', () => request
-        .get('/api/articles/1/comments')
-        .expect(200)
-        .then(({
-          body,
-        }) => {
-          expect(body.comments).to.be.an('array');
-          expect(body.comments[0].username).to.equal('butter_bridge');
           expect(body.comments[0]).to.contains.keys(
             'comment_id',
             'username',
