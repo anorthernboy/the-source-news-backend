@@ -34,35 +34,50 @@ const createTime = (num) => {
   return numDate.toDateString();
 };
 
-exports.formatArticles = (articleData, topicRef, userRef) => articleData.map((article) => {
-  const {
-    topic,
-    created_by,
-    created_at,
-    ...restOfArticle
-  } = article;
+exports.formatArticles = (articleData, topicRef, userRef) => {
+  if (articleData.length === 0) {
+    return [{}];
+  }
+  if (!topicRef || !userRef) {
+    return [{}];
+  }
+  return articleData.map((article) => {
+    const {
+      topic,
+      created_by,
+      created_at,
+      ...restOfArticle
+    } = article;
 
-  return {
-    topic: topicRef[topic],
-    username: userRef[created_by],
-    created_at: createTime(created_at),
-    ...restOfArticle,
-  };
-});
+    return {
+      topic: topicRef[topic],
+      username: userRef[created_by],
+      created_at: createTime(created_at),
+      ...restOfArticle,
+    };
+  });
+};
 
+exports.formatComments = (commentData, userRef, articleRef) => {
+  if (commentData.length === 0) {
+    return [{}];
+  }
+  if (!userRef || !articleRef) {
+    return [{}];
+  }
+  return commentData.map((comment) => {
+    const {
+      created_by,
+      belongs_to,
+      created_at,
+      ...restOfComment
+    } = comment;
 
-exports.formatComments = (commentData, userRef, articleRef) => commentData.map((comment) => {
-  const {
-    created_by,
-    belongs_to,
-    created_at,
-    ...restOfComment
-  } = comment;
-
-  return {
-    username: userRef[created_by],
-    article_id: articleRef[belongs_to],
-    created_at: createTime(created_at),
-    ...restOfComment,
-  };
-});
+    return {
+      username: userRef[created_by],
+      article_id: articleRef[belongs_to],
+      created_at: createTime(created_at),
+      ...restOfComment,
+    };
+  });
+};

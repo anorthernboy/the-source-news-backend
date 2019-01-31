@@ -85,14 +85,149 @@ describe('/utils', () => {
   });
 
   describe('/formatArticles()', () => {
-    it('does something...', () => {
-      expect(formatArticles()).to.eql();
+    it('return empty array-like object when passed empty array', () => {
+      const articleData = [];
+      const topicRef = {};
+      const userRef = {};
+      expect(formatArticles(articleData, topicRef, userRef)).to.eql([{}]);
+    });
+
+    it('return an empty array-like object when passed less then two reference objects', () => {
+      const articleData = [{
+        title: 'Running a Node App',
+        topic: 'coding',
+        created_by: 'tickle122',
+        body: 'This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.',
+        created_at: 1471522072389,
+      }, {
+        title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+        topic: 'football',
+        created_by: 'grumpy19',
+        body: 'Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.',
+        created_at: 1500584273256,
+      }];
+      const topicRef = {
+        coding: 'coding',
+        football: 'football',
+      };
+      const userRef = {
+        tickle122: 'tickle122',
+        grumpy19: 'grumpy19',
+      };
+      expect(formatArticles(articleData, topicRef)).to.eql([{}]);
+      expect(formatArticles(articleData, userRef)).to.eql([{}]);
+      expect(formatArticles(articleData)).to.eql([{}]);
+    });
+
+    it('return an array-like object with updated username and created_at fields', () => {
+      const articleData = [{
+        title: 'Running a Node App',
+        topic: 'coding',
+        created_by: 'tickle122',
+        body: 'This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.',
+        created_at: 1471522072389,
+      }, {
+        title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+        topic: 'football',
+        created_by: 'grumpy19',
+        body: 'Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.',
+        created_at: 1500584273256,
+      }];
+      const topicRef = {
+        coding: 'coding',
+        football: 'football',
+      };
+      const userRef = {
+        tickle122: 'tickle122',
+        grumpy19: 'grumpy19',
+      };
+      expect(formatArticles(articleData, topicRef, userRef)).to.eql([{
+        title: 'Running a Node App',
+        topic: 'coding',
+        username: 'tickle122',
+        body: 'This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.',
+        created_at: 'Thu Aug 18 2016',
+      }, {
+        title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+        topic: 'football',
+        username: 'grumpy19',
+        body: 'Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.',
+        created_at: 'Thu Jul 20 2017',
+      }]);
     });
   });
 
   describe('/formatComments()', () => {
-    it('does something...', () => {
-      expect(formatComments()).to.eql();
+    it('return empty array-like object when passed empty array', () => {
+      const commentData = [];
+      const userRef = {};
+      const articleRef = {};
+      expect(formatComments(commentData, userRef, articleRef)).to.eql([{}]);
+    });
+
+    it('return an empty array-like object when passed less then two reference objects', () => {
+      const commentData = [{
+        body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+        belongs_to: 'The People Tracking Every Touch, Pass And Tackle in the World Cup',
+        created_by: 'tickle122',
+        votes: -1,
+        created_at: 1468087638932,
+      }, {
+        body: 'Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.',
+        belongs_to: 'Making sense of Redux',
+        created_by: 'grumpy19',
+        votes: 7,
+        created_at: 1478813209256,
+      }];
+      const userRef = {
+        tickle122: 'tickle122',
+        grumpy19: 'grumpy19',
+      };
+      const articleRef = {
+        'Running a Node App': 1,
+        'The Rise Of Thinking Machines: How IBMs Watson Takes On The World': 2,
+        '22 Amazing open source React projects': 3,
+      };
+      expect(formatComments(commentData, userRef)).to.eql([{}]);
+      expect(formatComments(commentData, articleRef)).to.eql([{}]);
+      expect(formatComments(commentData)).to.eql([{}]);
+    });
+
+    it('return an array-like object with updated username and created_at fields', () => {
+      const commentData = [{
+        body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+        belongs_to: 'The People Tracking Every Touch, Pass And Tackle in the World Cup',
+        created_by: 'tickle122',
+        votes: -1,
+        created_at: 1468087638932,
+      }, {
+        body: 'Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.',
+        belongs_to: 'Making sense of Redux',
+        created_by: 'grumpy19',
+        votes: 7,
+        created_at: 1478813209256,
+      }];
+      const userRef = {
+        tickle122: 'tickle122',
+        grumpy19: 'grumpy19',
+      };
+      const articleRef = {
+        'The People Tracking Every Touch, Pass And Tackle in the World Cup': 1,
+        'Making sense of Redux': 2,
+      };
+      expect(formatComments(commentData, userRef, articleRef)).to.eql([{
+        body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+        article_id: 1,
+        username: 'tickle122',
+        votes: -1,
+        created_at: 'Sat Jul 09 2016',
+      }, {
+        body: 'Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.',
+        article_id: 2,
+        username: 'grumpy19',
+        votes: 7,
+        created_at: 'Thu Nov 10 2016',
+      }]);
     });
   });
 });
