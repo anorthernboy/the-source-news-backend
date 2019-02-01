@@ -13,3 +13,19 @@ exports.handle404 = (err, req, res, next) => {
     });
   } else next(err);
 };
+
+exports.handle405 = (err, req, res, next) => {
+  if (err.status === 405) {
+    res.status(405).json({
+      msg: 'method not allowed',
+    });
+  } else next(err);
+};
+
+exports.handle500 = (err, req, res, next) => {
+  if (err.status === 500) {
+    res.status(500).json({
+      msg: 'internal server error',
+    });
+  } else next(err);
+};

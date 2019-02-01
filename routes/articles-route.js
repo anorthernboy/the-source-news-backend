@@ -1,6 +1,6 @@
 const router = require('express').Router();
-
 const {
+  send405Error,
   getArticles,
   getArticlesById,
   patchArticleById,
@@ -11,22 +11,19 @@ const {
   deleteArticleCommentByCommentId,
 } = require('../controllers/articles-controller');
 
-
 router.get('/', getArticles);
-
-router.get('/:article_id', getArticlesById);
-
-router.patch('/:article_id', patchArticleById);
-
-router.delete('/:article_id', deleteArticleById);
-
-router.get('/:article_id/comments', getCommentsByArticleId);
-
-router.post('/:article_id/comments', addCommentByArticleId);
-
-router.patch('/:article_id/comments/:comment_id', patchArticleCommentVoteByCommentId);
-
-router.delete('/:article_id/comments/:comment_id', deleteArticleCommentByCommentId);
-
+router.route('/:article_id')
+  .get(getArticlesById)
+  .patch(patchArticleById)
+  .delete(deleteArticleById)
+  .all(send405Error);
+router.route('/:article_id/comments')
+  .get(getCommentsByArticleId)
+  .post(addCommentByArticleId)
+  .all(send405Error);
+router.route('/:article_id/comments/:comment_id')
+  .patch(patchArticleCommentVoteByCommentId)
+  .delete(deleteArticleCommentByCommentId)
+  .all(send405Error);
 
 module.exports = router;

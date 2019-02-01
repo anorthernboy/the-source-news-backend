@@ -9,6 +9,10 @@ const {
   removeComment,
 } = require('../db/models/articles-model');
 
+exports.send405Error = (req, res, next) => next({
+  status: 405,
+  message: 'method not allowed',
+});
 
 exports.getArticles = (req, res, next) => {
   const {
@@ -17,16 +21,16 @@ exports.getArticles = (req, res, next) => {
     order,
   } = req.query;
   fetchArticles(limit, sort_by, order)
-    .then((articles) => {
-      const displayArticles = articles.reduce((acc, curr) => {
-        acc.articles.push(curr);
+    .then((result) => {
+      const articles = result.reduce((acc, curr) => {
+        acc.result.push(curr);
         return acc;
       }, {
-        total_count: articles.length,
+        total_count: result.length,
         articles: [],
       });
       res.status(200).json({
-        displayArticles,
+        articles,
       });
     })
     .catch(next);
@@ -71,7 +75,7 @@ exports.patchArticleById = (req, res, next) => {
     });
   }
   return updateArticle(article_id, inc_votes)
-    .then(article => res.status(200).json({
+    .then(([article]) => res.status(200).json({
       article,
     }))
     .catch(next);
@@ -88,9 +92,7 @@ exports.deleteArticleById = (req, res, next) => {
     });
   }
   return removeArticle(article_id)
-    .then(article => res.status(204).json({
-      article,
-    }))
+    .then(() => res.status(204).send())
     .catch(next);
 };
 
@@ -136,7 +138,7 @@ exports.addCommentByArticleId = (req, res, next) => {
     });
   }
   return addNewComment(req.body)
-    .then(comment => res.status(201).json({
+    .then(([comment]) => res.status(201).json({
       comment,
     }))
     .catch(next);
@@ -157,7 +159,7 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
     });
   }
   return updateVote(article_id, comment_id, inc_votes)
-    .then(comment => res.status(200).json({
+    .then(([comment]) => res.status(200).json({
       comment,
     }))
     .catch(next);
@@ -175,8 +177,6 @@ exports.deleteArticleCommentByCommentId = (req, res, next) => {
     });
   }
   return removeComment(article_id, comment_id)
-    .then(comment => res.status(204).json({
-      comment,
-    }))
+    .then(() => res.status(204).json())
     .catch(next);
 };

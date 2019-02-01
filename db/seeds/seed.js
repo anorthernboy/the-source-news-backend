@@ -4,14 +4,12 @@ const {
   userData,
   commentData,
 } = require('../data/index');
-
 const {
   createRef,
   createArticleRef,
   formatArticles,
   formatComments,
 } = require('../utils/index');
-
 
 exports.seed = function (connection, Promise) {
   return connection.migrate.rollback()

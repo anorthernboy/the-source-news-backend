@@ -297,9 +297,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.topic).to.be.an('array');
-            expect(body.topic[0].slug).to.equal('joystick');
-            expect(body.topic[0]).to.contains.keys('description', 'slug');
+            expect(body.topic).to.be.an('object');
+            expect(body.topic.slug).to.equal('joystick');
+            expect(body.topic).to.contains.keys('description', 'slug');
           });
       });
 
@@ -327,17 +327,17 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles).to.be.an('object');
-          expect(body.displayArticles).to.contains.keys('total_count', 'articles');
-          expect(body.displayArticles.total_count).to.equal(10);
-          expect(body.displayArticles.articles).to.be.an('array');
-          expect(body.displayArticles.articles[0].comment_count).to.equal('13');
-          expect(body.displayArticles.articles[0]).to.contains.keys(
+          expect(body.articles).to.be.an('object');
+          expect(body.articles).to.contains.keys('total_count', 'articles');
+          expect(body.articles.total_count).to.equal(10);
+          expect(body.articles.articles).to.be.an('array');
+          expect(body.articles.articles[0].comment_count).to.equal('13');
+          expect(body.articles.articles[0]).to.contains.keys(
             'article_id',
             'title',
             'votes',
             'topic',
-            'username',
+            'author',
             'created_at',
             'comment_count',
           );
@@ -349,7 +349,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
+          expect(body.articles.articles).to.have.length(10);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]', () => request
@@ -358,7 +358,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.articles.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -367,8 +367,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal(
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal(
             'Living in the shadow of a great man',
           );
         }));
@@ -379,8 +379,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal('Z');
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -389,8 +389,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal('Moustache');
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal('Moustache');
         }));
 
       it('GET ERR response status:404 and a not found message for topic which does not exist', () => request
@@ -417,9 +417,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('array');
-            expect(body.article[0].topic).to.equal('mitch');
-            expect(body.article[0]).to.contains.keys(
+            expect(body.article).to.be.an('object');
+            expect(body.article.topic).to.equal('mitch');
+            expect(body.article).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -470,9 +470,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.user).to.be.an('array');
-            expect(body.user[0].username).to.equal('stilton_01');
-            expect(body.user[0]).to.contains.keys(
+            expect(body.user).to.be.an('object');
+            expect(body.user.username).to.equal('stilton_01');
+            expect(body.user).to.contains.keys(
               'username',
               'name',
               'avatar_url',
@@ -514,16 +514,16 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles).to.be.an('object');
-          expect(body.displayArticles).to.contains.keys('total_count', 'articles');
-          expect(body.displayArticles.articles).to.be.an('array');
-          expect(body.displayArticles.articles[0].username).to.equal('butter_bridge');
-          expect(body.displayArticles.articles[0]).to.contains.keys(
+          expect(body.articles).to.be.an('object');
+          expect(body.articles).to.contains.keys('total_count', 'articles');
+          expect(body.articles.articles).to.be.an('array');
+          expect(body.articles.articles[0].username).to.equal('butter_bridge');
+          expect(body.articles.articles[0]).to.contains.keys(
             'article_id',
             'title',
             'votes',
             'topic',
-            'username',
+            'author',
             'created_at',
             'comment_count',
           );
@@ -535,7 +535,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.articles.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 2 article objects for the username [QUERY CASE]', () => request
@@ -544,7 +544,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(2);
+          expect(body.articles.articles).to.have.length(2);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -553,8 +553,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
-          expect(body.displayArticles.articles[0].username).to.equal(
+          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles.articles[0].username).to.equal(
             'icellusedkars',
           );
         }));
@@ -565,8 +565,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
-          expect(body.displayArticles.articles[0].title).to.equal('Z');
+          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -575,8 +575,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
-          expect(body.displayArticles.articles[0].title).to.equal('Am I a cat?');
+          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles.articles[0].title).to.equal('Am I a cat?');
         }));
 
       it('GET ERR response status:404 and a not found message for username which does not exist', () => request
@@ -604,12 +604,12 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles).to.be.an('object');
-          expect(body.displayArticles).to.contains.keys('total_count', 'articles');
-          expect(body.displayArticles.total_count).to.equal(10);
-          expect(body.displayArticles.articles).to.be.an('array');
-          expect(body.displayArticles.articles[0]).to.contains.keys(
-            'username',
+          expect(body.articles).to.be.an('object');
+          expect(body.articles).to.contains.keys('total_count', 'articles');
+          expect(body.articles.total_count).to.equal(10);
+          expect(body.articles.articles).to.be.an('array');
+          expect(body.articles.articles[0]).to.contains.keys(
+            'author',
             'title',
             'article_id',
             'body',
@@ -626,7 +626,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
+          expect(body.articles.articles).to.have.length(10);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]', () => request
@@ -635,7 +635,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(5);
+          expect(body.articles.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -644,8 +644,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal(
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal(
             'Living in the shadow of a great man',
           );
         }));
@@ -656,8 +656,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal('Z');
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -666,8 +666,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticles.articles).to.have.length(10);
-          expect(body.displayArticles.articles[0].title).to.equal('Moustache');
+          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles.articles[0].title).to.equal('Moustache');
         }));
     });
 
@@ -687,7 +687,7 @@ describe('/api', () => {
             'body',
             'votes',
             'topic',
-            'username',
+            'author',
             'created_at',
             'comment_count',
           );
@@ -724,10 +724,10 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('array');
-            expect(body.article[0].article_id).to.equal(1);
-            expect(body.article[0].votes).to.equal(110);
-            expect(body.article[0]).to.contains.keys(
+            expect(body.article).to.be.an('object');
+            expect(body.article.article_id).to.equal(1);
+            expect(body.article.votes).to.equal(110);
+            expect(body.article).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -750,10 +750,10 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('array');
-            expect(body.article[0].article_id).to.equal(1);
-            expect(body.article[0].votes).to.equal(90);
-            expect(body.article[0]).to.contains.keys(
+            expect(body.article).to.be.an('object');
+            expect(body.article.article_id).to.equal(1);
+            expect(body.article.votes).to.equal(90);
+            expect(body.article).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -804,7 +804,7 @@ describe('/api', () => {
           expect(body.comments).to.be.an('array');
           expect(body.comments[0]).to.contains.keys(
             'comment_id',
-            'username',
+            'author',
             'votes',
             'created_at',
             'body',
@@ -893,9 +893,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('array');
-            expect(body.comment[0].article_id).to.equal(2);
-            expect(body.comment[0]).to.contains.keys(
+            expect(body.comment).to.be.an('object');
+            expect(body.comment.article_id).to.equal(2);
+            expect(body.comment).to.contains.keys(
               'comment_id',
               'username',
               'article_id',
@@ -935,11 +935,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('array');
-            expect(body.comment[0].comment_id).to.equal(1);
-            expect(body.comment[0].article_id).to.equal(9);
-            expect(body.comment[0].votes).to.equal(26);
-            expect(body.comment[0]).to.contains.keys(
+            expect(body.comment).to.be.an('object');
+            expect(body.comment.comment_id).to.equal(1);
+            expect(body.comment.article_id).to.equal(9);
+            expect(body.comment.votes).to.equal(26);
+            expect(body.comment).to.contains.keys(
               'comment_id',
               'username',
               'article_id',
@@ -961,11 +961,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('array');
-            expect(body.comment[0].comment_id).to.equal(1);
-            expect(body.comment[0].article_id).to.equal(9);
-            expect(body.comment[0].votes).to.equal(6);
-            expect(body.comment[0]).to.contains.keys(
+            expect(body.comment).to.be.an('object');
+            expect(body.comment.comment_id).to.equal(1);
+            expect(body.comment.article_id).to.equal(9);
+            expect(body.comment.votes).to.equal(6);
+            expect(body.comment).to.contains.keys(
               'comment_id',
               'username',
               'article_id',

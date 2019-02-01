@@ -1,6 +1,5 @@
 const connection = require('../connection');
 
-
 exports.fetchTopics = () => connection('topics')
   .select('*');
 
@@ -9,7 +8,7 @@ exports.addNewTopic = topic => connection('topics')
   .returning('*');
 
 exports.fetchArticlesByTopic = (topic, limit = 10, sort_by = 'articles.created_at', order = 'DESC') => connection('articles')
-  .select('articles.username', 'articles.title', 'articles.article_id', 'articles.votes', 'articles.created_at', 'articles.topic')
+  .select('articles.username as author', 'articles.title', 'articles.article_id', 'articles.votes', 'articles.created_at', 'articles.topic')
   .leftJoin('comments', 'articles.article_id', 'comments.article_id')
   .count('comments.article_id as comment_count')
   .groupBy('articles.article_id')

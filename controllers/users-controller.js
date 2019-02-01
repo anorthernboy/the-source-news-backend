@@ -5,6 +5,10 @@ const {
   fetchArticlesByUsername,
 } = require('../db/models/users-model');
 
+exports.send405Error = (req, res, next) => next({
+  status: 405,
+  message: 'method not allowed',
+});
 
 exports.getUsers = (req, res, next) => {
   fetchUsers()
@@ -16,7 +20,7 @@ exports.getUsers = (req, res, next) => {
 
 exports.addUser = (req, res, next) => {
   addNewUser(req.body)
-    .then(user => res.status(201).json({
+    .then(([user]) => res.status(201).json({
       user,
     }))
     .catch(next);
@@ -51,22 +55,22 @@ exports.getArticlesByUsername = (req, res, next) => {
     order,
   } = req.query;
   fetchArticlesByUsername(username, limit, sort_by, order)
-    .then((articles) => {
-      if (articles.length === 0) {
+    .then((result) => {
+      if (result.length === 0) {
         return Promise.reject({
           status: 404,
           message: 'not found',
         });
       }
-      const displayArticles = articles.reduce((acc, curr) => {
-        acc.articles.push(curr);
+      const articles = result.reduce((acc, curr) => {
+        acc.result.push(curr);
         return acc;
       }, {
-        total_count: articles.length,
+        total_count: result.length,
         articles: [],
       });
       return res.status(200).json({
-        displayArticles,
+        articles,
       });
     })
     .catch(next);

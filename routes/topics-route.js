@@ -1,20 +1,19 @@
 const router = require('express').Router();
-
 const {
+  send405Error,
   getTopics,
   addTopic,
   getArticlesByTopic,
   addArticleByTopic,
 } = require('../controllers/topics-controller');
 
-
-router.get('/', getTopics);
-
-router.post('/', addTopic);
-
-router.get('/:topic/articles', getArticlesByTopic);
-
-router.post('/:topic/articles', addArticleByTopic);
-
+router.route('/')
+  .get(getTopics)
+  .post(addTopic)
+  .all(send405Error);
+router.route('/:topic/articles')
+  .get(getArticlesByTopic)
+  .post(addArticleByTopic)
+  .all(send405Error);
 
 module.exports = router;
