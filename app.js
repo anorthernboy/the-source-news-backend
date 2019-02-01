@@ -12,6 +12,8 @@ const {
 
 app.use(bodyParser.json());
 
+app.use('/', apiRouter);
+
 app.use('/api', apiRouter);
 
 app.use(handle400);
