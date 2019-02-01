@@ -488,9 +488,9 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayUser).to.be.an('object');
-          expect(body.displayUser.username).to.equal('butter_bridge');
-          expect(body.displayUser).to.contains.keys(
+          expect(body.user).to.be.an('object');
+          expect(body.user.username).to.equal('butter_bridge');
+          expect(body.user).to.contains.keys(
             'username',
             'name',
             'avatar_url',
@@ -678,10 +678,10 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.displayArticle).to.be.an('object');
-          expect(body.displayArticle.article_id).to.equal(1);
-          expect(body.displayArticle.comment_count).to.equal('13');
-          expect(body.displayArticle).to.contains.keys(
+          expect(body.article).to.be.an('object');
+          expect(body.article.article_id).to.equal(1);
+          expect(body.article.comment_count).to.equal('13');
+          expect(body.article).to.contains.keys(
             'article_id',
             'title',
             'body',
@@ -701,11 +701,18 @@ describe('/api', () => {
         }) => {
           expect(body.msg).to.equal('not found');
         }));
+
+      it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
+        .get('/api/articles/smiths_disco')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
     });
 
     describe('patchArticleById()', () => {
-      // only works where votes starting value is 0 at the moment
-
       it('PATCH response status:200 and an updated article object for the article_id when given a positive vote', () => {
         const updateArticle = {
           inc_votes: 10,
@@ -757,10 +764,34 @@ describe('/api', () => {
             );
           });
       });
+
+      it('PATCH ERR response status:400 and a bad request message for article_id which is not a number', () => {
+        const updateArticle = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/the_curse')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
     });
 
     describe('deleteArticleById()', () => {
       it('DELETE response status:204 and no content', () => request.delete('/api/articles/1').expect(204));
+
+      it('DELETE ERR response status:400 and a bad request message for article_id which is not a number', () => request
+        .delete('/api/articles/the_curse')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
     });
 
     describe('getCommentsByArticleId()', () => {
@@ -838,6 +869,15 @@ describe('/api', () => {
         }) => {
           expect(body.msg).to.equal('not found');
         }));
+
+      it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
+        .get('/api/articles/smiths_disco')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
     });
 
     describe('addCommentByArticleId()', () => {
@@ -863,6 +903,22 @@ describe('/api', () => {
               'created_at',
               'body',
             );
+          });
+      });
+
+      it('POST ERR response status:400 and a bad request message for article_id which is not a number', () => {
+        const newComment = {
+          body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
+          username: 'butter_bridge',
+        };
+        return request
+          .post('/api/articles/smiths_disco/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
           });
       });
     });
@@ -919,10 +975,59 @@ describe('/api', () => {
             );
           });
       });
+
+      it('PATCH ERR response status:400 and a bad request message for comment_id which is not a number', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/9/comments/smiths_disco')
+          .send(updateComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+
+      it('PATCH ERR response status:400 and a bad request message for article_id which is not a number', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/smiths_disco/comments/1')
+          .send(updateComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
     });
 
     describe('deleteArticleCommentByCommentId()', () => {
       it('DELETE response status:204 and no content', () => request.delete('/api/articles/9/comments/1').expect(204));
+
+      it('DELETE ERR response status:400 and a bad request message for article_id which is not a number', () => request
+        .delete('/api/articles/shake_a_maraca/comments/1')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
+
+      it('DELETE ERR response status:400 and a bad request message for comment_id which is not a number', () => request
+        .delete('/api/articles/9/comments/shake_a_maraca')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
     });
   });
 

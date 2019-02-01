@@ -27,19 +27,15 @@ exports.getUserByUsername = (req, res, next) => {
     username,
   } = req.params;
   fetchUserByUsername(username)
-    .then((user) => {
-      if (user.length === 0) {
+    .then(([user]) => {
+      if (!user) {
         return Promise.reject({
           status: 404,
           message: 'not found',
         });
       }
-      const displayUser = user.reduce((acc, curr) => {
-        acc = curr;
-        return acc;
-      }, {});
       return res.status(200).json({
-        displayUser,
+        user,
       });
     })
     .catch(next);

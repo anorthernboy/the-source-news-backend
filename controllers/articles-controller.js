@@ -36,20 +36,22 @@ exports.getArticlesById = (req, res, next) => {
   const {
     article_id,
   } = req.params;
-  fetchArticlesById(article_id)
-    .then((article) => {
-      if (article.length === 0) {
+  if (isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return fetchArticlesById(article_id)
+    .then(([article]) => {
+      if (!article) {
         return Promise.reject({
           status: 404,
           message: 'not found',
         });
       }
-      const displayArticle = article.reduce((acc, curr) => {
-        acc = curr;
-        return acc;
-      }, {});
       return res.status(200).json({
-        displayArticle,
+        article,
       });
     })
     .catch(next);
@@ -62,7 +64,13 @@ exports.patchArticleById = (req, res, next) => {
   const {
     inc_votes,
   } = req.body;
-  updateArticle(article_id, inc_votes)
+  if (isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return updateArticle(article_id, inc_votes)
     .then(article => res.status(200).json({
       article,
     }))
@@ -73,7 +81,13 @@ exports.deleteArticleById = (req, res, next) => {
   const {
     article_id,
   } = req.params;
-  removeArticle(article_id)
+  if (isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return removeArticle(article_id)
     .then(article => res.status(204).json({
       article,
     }))
@@ -89,7 +103,13 @@ exports.getCommentsByArticleId = (req, res, next) => {
     sort_by,
     sort_ascending,
   } = req.query;
-  fetchCommentsByArticleId(article_id, limit, sort_by, sort_ascending)
+  if (isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return fetchCommentsByArticleId(article_id, limit, sort_by, sort_ascending)
     .then((comments) => {
       if (comments.length === 0) {
         return Promise.reject({
@@ -109,7 +129,13 @@ exports.addCommentByArticleId = (req, res, next) => {
     article_id,
   } = req.params;
   req.body.article_id = article_id;
-  addNewComment(req.body)
+  if (isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return addNewComment(req.body)
     .then(comment => res.status(201).json({
       comment,
     }))
@@ -124,7 +150,13 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
   const {
     inc_votes,
   } = req.body;
-  updateVote(article_id, comment_id, inc_votes)
+  if (isNaN(+comment_id) || isNaN(+article_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return updateVote(article_id, comment_id, inc_votes)
     .then(comment => res.status(200).json({
       comment,
     }))
@@ -136,7 +168,13 @@ exports.deleteArticleCommentByCommentId = (req, res, next) => {
     article_id,
     comment_id,
   } = req.params;
-  removeComment(article_id, comment_id)
+  if (isNaN(+article_id) || isNaN(+comment_id)) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return removeComment(article_id, comment_id)
     .then(comment => res.status(204).json({
       comment,
     }))
