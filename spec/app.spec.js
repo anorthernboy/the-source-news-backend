@@ -1,17 +1,12 @@
 process.env.NODE_ENV = 'test';
-
 const {
   expect,
 } = require('chai');
-
 const supertest = require('supertest');
-
 const app = require('../app');
 
 const request = supertest(app);
-
 const connection = require('../db/connection');
-
 const {
   createRef,
   createArticleRef,
@@ -262,9 +257,9 @@ describe('/api', () => {
         body,
       }) => {
         expect(body).to.be.an('object');
-        expect(body).to.contains.keys('nc_knews');
       }));
   });
+
   //                  //
   //                  //
   //  TOPICS ROUTER   //
@@ -303,21 +298,36 @@ describe('/api', () => {
           });
       });
 
-      // it('POST ERR response status:400 and bad request message', () => {
-      //   const newTopic = {
-      //     slug: 'mitch',
-      //     description: 'wreck pastel slip snail meadow upset consumption',
-      //   };
-      //   return request
-      //     .post('/api/topics')
-      //     .send(newTopic)
-      //     .expect(400)
-      //     .then(({
-      //       body,
-      //     }) => {
-      //       expect(body.msg).to.equal('bad request');
-      //     });
-      // });
+      it('POST ERR response status:400 and bad request message', () => {
+        const newTopic = {
+          description: 'wreck pastel slip snail meadow upset consumption',
+        };
+        return request
+          .post('/api/topics')
+          .send(newTopic)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('POST ERR response status:422 and unable to process message', () => {
+        const newTopic = {
+          slug: 'mitch',
+          description: 'wreck pastel slip snail meadow upset consumption',
+        };
+        return request
+          .post('/api/topics')
+          .send(newTopic)
+          .expect(422)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('unable to process');
+          });
+      });
     });
 
     describe('getArticlesByTopic()', () => {
@@ -327,12 +337,12 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('object');
-          expect(body.articles).to.contains.keys('total_count', 'articles');
-          expect(body.articles.total_count).to.equal(10);
-          expect(body.articles.articles).to.be.an('array');
-          expect(body.articles.articles[0].comment_count).to.equal('13');
-          expect(body.articles.articles[0]).to.contains.keys(
+          expect(body).to.be.an('object');
+          expect(body).to.contains.keys('total_count', 'articles');
+          expect(body.total_count).to.equal(10);
+          expect(body.articles).to.be.an('array');
+          expect(body.articles[0].comment_count).to.equal('13');
+          expect(body.articles[0]).to.contains.keys(
             'article_id',
             'title',
             'votes',
@@ -349,7 +359,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles).to.have.length(10);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]', () => request
@@ -358,7 +368,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -367,8 +377,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal(
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal(
             'Living in the shadow of a great man',
           );
         }));
@@ -379,8 +389,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal('Z');
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -389,8 +399,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal('Moustache');
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal('Moustache');
         }));
 
       it('GET ERR response status:404 and a not found message for topic which does not exist', () => request
@@ -428,6 +438,56 @@ describe('/api', () => {
               'username',
               'created_at',
             );
+          });
+      });
+
+      it('POST response status:404 and not found message for non-existent topic param', () => {
+        const newArticle = {
+          title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
+          body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
+          username: 'butter_bridge',
+        };
+        return request
+          .post('/api/topics/articles')
+          .send(newArticle)
+          .expect(404);
+        // .then(({
+        //   body,
+        // }) => {
+        //   expect(body.msg).to.equal('not found');
+        // });
+      });
+
+      it('POST ERR response status:400 and bad request message for topic which does not exist', () => {
+        const newArticle = {
+          title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
+          body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
+          username: 'butter_bridge',
+        };
+        return request
+          .post('/api/topics/gimme_shelter/articles')
+          .send(newArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('POST response status:400 and a bad request message for malformed article', () => {
+        const newArticle = {
+          title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
+          body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
+        };
+        return request
+          .post('/api/topics/mitch/articles')
+          .send(newArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
           });
       });
     });
@@ -479,6 +539,9 @@ describe('/api', () => {
             );
           });
       });
+
+      // test 400 for username not unique
+      // test 400 for malformed article
     });
 
     describe('getUserByUsername()', () => {
@@ -514,11 +577,11 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('object');
-          expect(body.articles).to.contains.keys('total_count', 'articles');
-          expect(body.articles.articles).to.be.an('array');
-          expect(body.articles.articles[0].username).to.equal('butter_bridge');
-          expect(body.articles.articles[0]).to.contains.keys(
+          expect(body).to.be.an('object');
+          expect(body).to.contains.keys('total_count', 'articles');
+          expect(body.articles).to.be.an('array');
+          expect(body.articles[0].author).to.equal('butter_bridge');
+          expect(body.articles[0]).to.contains.keys(
             'article_id',
             'title',
             'votes',
@@ -535,7 +598,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 2 article objects for the username [QUERY CASE]', () => request
@@ -544,7 +607,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(2);
+          expect(body.articles).to.have.length(2);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -553,8 +616,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
-          expect(body.articles.articles[0].username).to.equal(
+          expect(body.articles).to.have.length(5);
+          expect(body.articles[0].author).to.equal(
             'icellusedkars',
           );
         }));
@@ -565,8 +628,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
-          expect(body.articles.articles[0].title).to.equal('Z');
+          expect(body.articles).to.have.length(5);
+          expect(body.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -575,8 +638,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
-          expect(body.articles.articles[0].title).to.equal('Am I a cat?');
+          expect(body.articles).to.have.length(5);
+          expect(body.articles[0].title).to.equal('Am I a cat?');
         }));
 
       it('GET ERR response status:404 and a not found message for username which does not exist', () => request
@@ -604,11 +667,11 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles).to.be.an('object');
-          expect(body.articles).to.contains.keys('total_count', 'articles');
-          expect(body.articles.total_count).to.equal(10);
-          expect(body.articles.articles).to.be.an('array');
-          expect(body.articles.articles[0]).to.contains.keys(
+          expect(body).to.be.an('object');
+          expect(body).to.contains.keys('total_count', 'articles');
+          expect(body.total_count).to.equal(10);
+          expect(body.articles).to.be.an('array');
+          expect(body.articles[0]).to.contains.keys(
             'author',
             'title',
             'article_id',
@@ -626,7 +689,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
+          expect(body.articles).to.have.length(10);
         }));
 
       it('GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]', () => request
@@ -635,7 +698,7 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(5);
+          expect(body.articles).to.have.length(5);
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
@@ -644,8 +707,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal(
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal(
             'Living in the shadow of a great man',
           );
         }));
@@ -656,8 +719,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal('Z');
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal('Z');
         }));
 
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -666,8 +729,8 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.articles.articles).to.have.length(10);
-          expect(body.articles.articles[0].title).to.equal('Moustache');
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal('Moustache');
         }));
     });
 
@@ -678,10 +741,10 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.article).to.be.an('object');
-          expect(body.article.article_id).to.equal(1);
-          expect(body.article.comment_count).to.equal('13');
-          expect(body.article).to.contains.keys(
+          expect(body).to.be.an('object');
+          expect(body.article_id).to.equal(1);
+          expect(body.comment_count).to.equal('13');
+          expect(body).to.contains.keys(
             'article_id',
             'title',
             'body',
@@ -779,6 +842,51 @@ describe('/api', () => {
             expect(body.msg).to.equal('bad request');
           });
       });
+
+      it('PATCH ERR response status:405 and a method not allowed message for a non-existent article_id', () => {
+        const updateArticle = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles')
+          .send(updateArticle)
+          .expect(405)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('method not allowed');
+          });
+      });
+
+      it('PATCH ERR response status:400 and a bad request message for inc_votes which is not a number', () => {
+        const updateArticle = {
+          inc_votes: 'flowers',
+        };
+        return request
+          .patch('/api/articles/the_curse')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('PATCH ERR response status:400 and a bad request message for inc_votes which does not exist', () => {
+        const updateArticle = {
+          showers: 10,
+        };
+        return request
+          .patch('/api/articles/the_curse')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
     });
 
     describe('deleteArticleById()', () => {
@@ -791,6 +899,15 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.msg).to.equal('bad request');
+        }));
+
+      it('DELETE ERR response status:405 and a method not allowed message for a non-existent article_id param', () => request
+        .delete('/api/articles')
+        .expect(405)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('method not allowed');
         }));
     });
 
@@ -836,7 +953,7 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.comments).to.have.length(10);
-          expect(body.comments[0].username).to.equal(
+          expect(body.comments[0].author).to.equal(
             'butter_bridge',
           );
         }));
@@ -848,7 +965,7 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.comments).to.have.length(10);
-          expect(body.comments[0].username).to.equal('icellusedkars');
+          expect(body.comments[0].author).to.equal('icellusedkars');
         }));
 
       it('GET response status:200 and an array of 10 comment objects for the article_id sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
@@ -858,7 +975,7 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.comments).to.have.length(10);
-          expect(body.comments[0].username).to.equal('butter_bridge');
+          expect(body.comments[0].author).to.equal('butter_bridge');
         }));
 
       it('GET ERR response status:404 and a not found message for article_id which does not exist', () => request
@@ -871,7 +988,7 @@ describe('/api', () => {
         }));
 
       it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
-        .get('/api/articles/smiths_disco')
+        .get('/api/articles/smiths_disco/comments')
         .expect(400)
         .then(({
           body,
@@ -919,6 +1036,22 @@ describe('/api', () => {
             body,
           }) => {
             expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('POST ERR response status:404 and a not found message for article_id which does not exist', () => {
+        const newComment = {
+          body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
+          username: 'butter_bridge',
+        };
+        return request
+          .post('/api/articles/9999999/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('not found');
           });
       });
     });
@@ -991,6 +1124,20 @@ describe('/api', () => {
           });
       });
 
+      it('PATCH ERR response status:405 and a method not allowed message for non-existent comment_id param', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/9/comments')
+          .send(updateComment)
+          .expect(405)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('method not allowed');
+          });
+      });
 
       it('PATCH ERR response status:400 and a bad request message for article_id which is not a number', () => {
         const updateComment = {
@@ -1005,6 +1152,21 @@ describe('/api', () => {
           }) => {
             expect(body.msg).to.equal('bad request');
           });
+      });
+
+      it('PATCH ERR response status:404 and a not found message for non-existent article_id param', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/comments/1')
+          .send(updateComment)
+          .expect(404);
+        // .then(({
+        //   body,
+        // }) => {
+        //   expect(body.msg).to.equal('not found');
+        // });
       });
     });
 
@@ -1027,6 +1189,24 @@ describe('/api', () => {
           body,
         }) => {
           expect(body.msg).to.equal('bad request');
+        }));
+
+      it('DELETE ERR response status:404 and a not found message for non-existent article_id param', () => request
+        .delete('/api/articles/comments/1')
+        .expect(404));
+      // .then(({
+      //   body,
+      // }) => {
+      //   expect(body.msg).to.equal('not found');
+      // })
+
+      it('DELETE ERR response status:405 and a method not allowed message for non-existent comment_id param', () => request
+        .delete('/api/articles/9/comments')
+        .expect(405)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('method not allowed');
         }));
     });
   });

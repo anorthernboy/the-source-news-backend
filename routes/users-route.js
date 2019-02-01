@@ -11,7 +11,7 @@ router.route('/')
   .get(getUsers)
   .post(addUser)
   .all(send405Error);
-router.get('/:username', getUserByUsername);
-router.get('/:username/articles', getArticlesByUsername);
+router.route('/:username').get(getUserByUsername).all(send405Error);
+router.route('/:username/articles').get(getArticlesByUsername).all(send405Error);
 
 module.exports = router;

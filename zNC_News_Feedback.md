@@ -32,10 +32,12 @@
 
 <!-- 1) POST status:201 responds with the added topic **array desctrucuring in the controller** -->
 
-2. POST status:422 client sends a body with a duplicate slug **need to add error handling (and test) for this**
-3. POST status:400 if request body is malformed (missing description property) **not null in sql tables (`.notNullabe()`)**
+<!-- 2. POST status:422 client sends a body with a duplicate slug **need to add error handling (and test) for this** -->
+<!-- 3. POST status:400 if request body is malformed (missing description property) **not null in sql tables (`.notNullabe()`)** -->
    <!-- 4) status:405 invalid HTTP method for this resource **we can add a `.all()` to our `.route()` chain after our allowed methods and invoke this with a 405 error handler** -->
-   /topics/:topic/articles
+
+/topics/:topic/articles
+
    <!-- 5) POST status:201 and a newly added article for that topic **array desctrucuring in the controller**
            GET status:200 -->
    <!-- 6) responds with an array of article objects **`{displayArticles}` ---> `{articles: displayArticles}`** --> 7) responds with a total_count property giving the number of articles for that topic **total_count of all articles, not the limit that are responded with**
@@ -47,13 +49,19 @@
    <!-- 13) takes a order query which changes the sort to ascending (DEFAULT sort_by: created_at) **`{displayArticles}` ---> `{articles: displayArticles}`** --> 14) takes an p query which changes the start page DEFAULT (limit=10) **additional query to test and implement, will make your Front-end app much more feature rich** 15) takes a p query and a limit query **additional query to test and implement, will make your Front-end app much more feature rich**
    <!-- 16) returns default response if given invalid sort_by (DEFAULT order_by: created_at) order (DEFAULT sort_order: DESC) **`{displayArticles}` ---> `{articles: displayArticles}`** -->
    <!-- 17) all article objects have a comment_count property **`{displayArticles}` ---> `{articles: displayArticles}`** -->
-   ERRORS
+
+ERRORS
+
    <!-- 18) POST status:404 adding an article to a non-existent topic **need to add some more error handling**
              19) invalid methods respond with 405  **mentioned above**
              20) POST status:400 if body is malformed (not null) (missing username and body) **not null, as mentioned above** -->
-   /articles
+
+/articles
+
    <!-- 21) status:405 invalid request method for end-point  **mentioned above** -->
-   GET status:200
+
+GET status:200
+
    <!-- 22) responds with an array of articles with correct keys **`{displayArticles}` ---> `{articles: displayArticles}`** -->
    <!-- 23) responds with an array of 10 articles (DEFAULT limit=10) **`{displayArticles}` ---> `{articles: displayArticles}`** -->
    <!-- 24) takes a limit query which alters the number of articles returned **`{displayArticles}` ---> `{articles: displayArticles}`** --> 25) takes an p query which alters the starting index of the articles returned (DEFAULT limit=10) **mentioned above**
@@ -62,22 +70,37 @@
    <!-- 28) takes a order query which changes the sort to ascending (DEFAULT sort_by=created_at) **`{displayArticles}` ---> `{articles: displayArticles}`** -->
    <!-- 29) can take a sort_by and an order query **`{displayArticles}` ---> `{articles: displayArticles}`** --> 30) will ignore an invalid sort_by query **how could we ensure this? when do we know the query is valid/invalid**
    <!-- 31) article objects have a comment_count property **`{displayArticles}` ---> `{articles: displayArticles}`** -->
-   /articles/:article_id
+
+/articles/:article_id
+
    <!-- 32) GET status:200 responds with a single article object **array destructuring** -->
    <!-- 33) PATCH status:200 and an updated article when given a body including a valid "inc_votes" (VOTE UP) **array destructuring** -->
-   <!-- 34) PATCH status:200 responds with an updated article when given a body including a valid "inc_votes" (VOTE DOWN) **array destructuring** --> 35) PATCH status:400 if given an invalid inc_votes **error handling**
-   <!-- 36) PATCH status:200s no body responds with an unmodified article **array destructuring** --> 37) DELETE status:404 when given a non-existent article_id **error handling**
+   <!-- 34) PATCH status:200 responds with an updated article when given a body including a valid "inc_votes" (VOTE DOWN) **array destructuring** -->
+   <!-- 35) PATCH status:400 if given an invalid inc_votes **error handling** -->
+   <!-- 36) PATCH status:200s no body responds with an unmodified article **array destructuring** -->
+   <!-- 37) DELETE status:404 when given a non-existent article_id **error handling** -->
    <!-- 38) invalid methods respond with 405 **as above** -->
-   /api/articles/:article_id/comments
-   GET
-   status:200 39) can change the sort order (DEFAULT sort_by=created_at) **`fetchCommentsByArticleId`'s `sort_ascending` should be `order`**
-   /articles/:article_id/comments/:comment_id
+
+/api/articles/:article_id/comments
+GET
+status:200 39) can change the sort order (DEFAULT sort_by=created_at) **`fetchCommentsByArticleId`'s `sort_ascending` should be `order`**
+/articles/:article_id/comments/:comment_id
+
    <!-- 40) PATCH status:200 and an updated comment when given a body including a valid "inc_votes" (VOTE DOWN) **array destructuring** -->
-   <!-- 41) PATCH status:200 with no body responds with an unmodified comment **array destructuring** --> 42) PATCH status:400 if given an invalid inc_votes **error handling** 43) PATCH status:404 non-existent article_id is used **error handling** 44) PATCH status:404 non-existent comment_id is used **error handling** 45) DELETE status:404 client uses a non-existent article_id **error handling** 46) DELETE status:404 client uses non-existent comment_id **error handling**
+   <!-- 41) PATCH status:200 with no body responds with an unmodified comment **array destructuring** -->
+   <!-- 42) PATCH status:400 if given an invalid inc_votes **error handling** 
+   43) PATCH status:404 non-existent article_id is used **error handling** 
+   44) PATCH status:404 non-existent comment_id is used **error handling**  -->
+   <!-- 45) DELETE status:404 client uses a non-existent article_id **error handling** 
+   46) DELETE status:404 client uses non-existent comment_id **error handling** -->
    <!-- 47) invalid methods respond with 405 **as above** -->
-   /users
+
+/users
+
    <!-- 48) invalid methods respond with 405 **as above** -->
-   /users/:username
+
+/users/:username
+
    <!-- 49) invalid methods respond with 405 **as above** -->
 
 16 passing (11s)

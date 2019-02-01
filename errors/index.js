@@ -22,6 +22,14 @@ exports.handle405 = (err, req, res, next) => {
   } else next(err);
 };
 
+exports.handle422 = (err, req, res, next) => {
+  if (err.status === 422) {
+    res.status(405).json({
+      msg: 'unable to process',
+    });
+  } else next(err);
+};
+
 exports.handle500 = (err, req, res, next) => {
   if (err.status === 500) {
     res.status(500).json({

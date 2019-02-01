@@ -63,15 +63,13 @@ exports.getArticlesByUsername = (req, res, next) => {
         });
       }
       const articles = result.reduce((acc, curr) => {
-        acc.result.push(curr);
+        acc.articles.push(curr);
         return acc;
       }, {
         total_count: result.length,
         articles: [],
       });
-      return res.status(200).json({
-        articles,
-      });
+      return res.status(200).json(articles);
     })
     .catch(next);
 };

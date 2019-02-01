@@ -11,7 +11,7 @@ const {
   deleteArticleCommentByCommentId,
 } = require('../controllers/articles-controller');
 
-router.get('/', getArticles);
+router.route('/').get(getArticles).all(send405Error);
 router.route('/:article_id')
   .get(getArticlesById)
   .patch(patchArticleById)

@@ -19,7 +19,17 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.addTopic = (req, res, next) => {
-  addNewTopic(req.body)
+  const {
+    slug,
+    description,
+  } = req.body;
+  if (!slug || !description) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return addNewTopic(req.body)
     .then(([topic]) => res.status(201).json({
       topic,
     }))
@@ -35,7 +45,6 @@ exports.getArticlesByTopic = (req, res, next) => {
     sort_by,
     order,
   } = req.query;
-
   fetchArticlesByTopic(topic, limit, sort_by, order)
     .then((result) => {
       if (result.length === 0) {
@@ -44,18 +53,15 @@ exports.getArticlesByTopic = (req, res, next) => {
           message: 'not found',
         });
       }
-
       const articles = result.reduce((acc, curr) => {
-        acc.result.push(curr);
+        acc.articles.push(curr);
         return acc;
       }, {
         total_count: result.length,
         articles: [],
       });
 
-      return res.status(200).json({
-        articles,
-      });
+      return res.status(200).json(articles);
     })
     .catch(next);
 };
@@ -64,10 +70,21 @@ exports.addArticleByTopic = (req, res, next) => {
   const {
     topic,
   } = req.params;
+  const {
+    title,
+    body,
+    username,
+  } = req.body;
 
   req.body.topic = topic;
 
-  addNewArticle(req.body)
+  if (!title || !body || !username) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return addNewArticle(req.body)
     .then(([article]) => res.status(201).json({
       article,
     }))

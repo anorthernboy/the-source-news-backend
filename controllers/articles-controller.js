@@ -23,15 +23,13 @@ exports.getArticles = (req, res, next) => {
   fetchArticles(limit, sort_by, order)
     .then((result) => {
       const articles = result.reduce((acc, curr) => {
-        acc.result.push(curr);
+        acc.articles.push(curr);
         return acc;
       }, {
         total_count: result.length,
         articles: [],
       });
-      res.status(200).json({
-        articles,
-      });
+      res.status(200).json(articles);
     })
     .catch(next);
 };
@@ -54,9 +52,7 @@ exports.getArticlesById = (req, res, next) => {
           message: 'not found',
         });
       }
-      return res.status(200).json({
-        article,
-      });
+      return res.status(200).json(article);
     })
     .catch(next);
 };
@@ -68,6 +64,12 @@ exports.patchArticleById = (req, res, next) => {
   const {
     inc_votes,
   } = req.body;
+  if (!article_id) {
+    return next({
+      status: 404,
+      message: 'not found',
+    });
+  }
   if (isNaN(+article_id)) {
     return next({
       status: 400,
@@ -85,6 +87,12 @@ exports.deleteArticleById = (req, res, next) => {
   const {
     article_id,
   } = req.params;
+  if (!article_id) {
+    return next({
+      status: 404,
+      message: 'not found',
+    });
+  }
   if (isNaN(+article_id)) {
     return next({
       status: 400,
