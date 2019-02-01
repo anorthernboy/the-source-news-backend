@@ -7,6 +7,7 @@ const env = process.env.NODE_ENV || 'development';
 const data = {
   test,
   development,
+  production: development,
 };
 
 
