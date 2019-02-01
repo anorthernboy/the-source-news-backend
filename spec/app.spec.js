@@ -303,21 +303,21 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:400 and bad request message', () => {
-        const newTopic = {
-          slug: 'mitch',
-          description: 'wreck pastel slip snail meadow upset consumption',
-        };
-        return request
-          .post('/api/topics')
-          .send(newTopic)
-          .expect(400)
-          .then(({
-            body,
-          }) => {
-            expect(body.msg).to.equal('bad request');
-          });
-      });
+      // it('POST ERR response status:400 and bad request message', () => {
+      //   const newTopic = {
+      //     slug: 'mitch',
+      //     description: 'wreck pastel slip snail meadow upset consumption',
+      //   };
+      //   return request
+      //     .post('/api/topics')
+      //     .send(newTopic)
+      //     .expect(400)
+      //     .then(({
+      //       body,
+      //     }) => {
+      //       expect(body.msg).to.equal('bad request');
+      //     });
+      // });
     });
 
     describe('getArticlesByTopic()', () => {
