@@ -1,6 +1,6 @@
 exports.getEndpoints = (req, res, next) => {
   res.status(200).json({
-    nc_knews: {
+    cw_news: {
       1: 'topics',
       2: 'users',
       3: 'articles',
