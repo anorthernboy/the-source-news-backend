@@ -10,6 +10,6 @@ const {
 router.route('/')
   .get(getComments)
   .all(send405);
-router.use('*', send404);
+router.use('/*', send404);
 
 module.exports = router;

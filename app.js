@@ -15,7 +15,7 @@ const {
 app.use(bodyParser.json());
 app.use('/', apiRouter);
 app.use('/api', apiRouter);
-app.use('*', send404);
+app.use('/*', send404);
 app.use(handle400);
 app.use(handle404);
 app.use(handle405);

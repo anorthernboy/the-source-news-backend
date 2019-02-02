@@ -18,6 +18,6 @@ router.route('/:topic/articles')
   .get(getArticlesByTopic)
   .post(addArticleByTopic)
   .all(send405);
-router.use('*', send404);
+router.use('/*', send404);
 
 module.exports = router;

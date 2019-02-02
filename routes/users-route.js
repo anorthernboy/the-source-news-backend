@@ -20,6 +20,6 @@ router.route('/:username')
 router.route('/:username/articles')
   .get(getArticlesByUsername)
   .all(send405);
-router.use('*', send404);
+router.use('/*', send404);
 
 module.exports = router;

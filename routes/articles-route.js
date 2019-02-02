@@ -30,6 +30,6 @@ router.route('/:article_id/comments/:comment_id')
   .patch(patchArticleCommentVoteByCommentId)
   .delete(deleteArticleCommentByCommentId)
   .all(send405);
-router.use('*', send404);
+router.use('/*', send404);
 
 module.exports = router;
