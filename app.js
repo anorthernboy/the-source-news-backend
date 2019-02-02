@@ -10,7 +10,7 @@ const {
 } = require('./errors/index');
 const {
   send404,
-} = require('../errors/index');
+} = require('./errors/index');
 
 app.use(bodyParser.json());
 app.use('/', apiRouter);
