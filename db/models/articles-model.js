@@ -3,12 +3,13 @@ const connection = require('../connection');
 exports.fetchAllArticles = () => connection('articles')
   .select('articles.article_id');
 
-exports.fetchArticles = (limit = 10, sort_by = 'articles.created_at', order = 'DESC') => connection('articles')
+exports.fetchArticles = (limit = 10, sort_by = 'articles.created_at', order = 'DESC', p = 1) => connection('articles')
   .select('articles.username as author', 'articles.title', 'articles.article_id', 'articles.body', 'articles.votes', 'articles.created_at', 'articles.topic')
   .leftJoin('comments', 'articles.article_id', 'comments.article_id')
   .count('comments.article_id as comment_count')
   .groupBy('articles.article_id')
   .limit(limit)
+  .offset(p * limit - limit)
   .orderBy(sort_by, order);
 
 exports.fetchArticlesById = article_id => connection('articles')
@@ -27,9 +28,10 @@ exports.removeArticle = article_id => connection('articles')
   .where('article_id', article_id)
   .del();
 
-exports.fetchCommentsByArticleId = (article_id, limit = 10, sort_by = 'comments.created_at', order = 'DESC') => connection('comments')
+exports.fetchCommentsByArticleId = (article_id, limit = 10, sort_by = 'comments.created_at', order = 'DESC', p = 1) => connection('comments')
   .select('comments.comment_id', 'comments.username as author', 'comments.votes', 'comments.created_at', 'comments.body')
   .limit(limit)
+  .offset(p * limit - limit)
   .orderBy(sort_by, order)
   .where('comments.article_id', article_id);
 

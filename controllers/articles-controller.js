@@ -16,10 +16,11 @@ exports.getArticles = (req, res, next) => {
     limit,
     sort_by,
     order,
+    p,
   } = req.query;
 
   fetchAllArticles()
-    .then(allArticles => fetchArticles(limit, sort_by, order)
+    .then(allArticles => fetchArticles(limit, sort_by, order, p)
       .then((result) => {
         const articles = result.reduce((acc, curr) => {
           acc.articles.push(curr);
@@ -114,7 +115,8 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const {
     limit,
     sort_by,
-    sort_ascending,
+    order,
+    p,
   } = req.query;
   if (isNaN(+article_id)) {
     return next({
@@ -122,7 +124,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return fetchCommentsByArticleId(article_id, limit, sort_by, sort_ascending)
+  return fetchCommentsByArticleId(article_id, limit, sort_by, order, p)
     .then((comments) => {
       if (comments.length === 0) {
         return Promise.reject({

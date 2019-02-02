@@ -279,7 +279,7 @@ describe('/api', () => {
         }));
     });
 
-    describe.only('addTopic()', () => {
+    describe('addTopic()', () => {
       it('POST response status:201 and the new topic object', () => {
         const newTopic = {
           slug: 'joystick',
@@ -401,6 +401,28 @@ describe('/api', () => {
         }) => {
           expect(body.articles).to.have.length(10);
           expect(body.articles[0].title).to.equal('Moustache');
+        }));
+
+      it('GET response status:200 and an array of 10 article objects for the topic paginated to page one [DEFAULT CASE]', () => request
+        .get('/api/topics/mitch/articles')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal(
+            'Living in the shadow of a great man',
+          );
+        }));
+
+      it('GET response status:200 and an array of 6 article objects for the topic paginated to page two [query CASE]', () => request
+        .get('/api/topics/mitch/articles?p=2')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(6);
+          expect(body.articles[0].title).to.equal('Am I a?');
         }));
 
       it('GET ERR response status:400 and a not found message for topic which does not exist', () => request
@@ -685,6 +707,25 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Am I a catch?');
         }));
 
+      it('GET response status:200 and an array of 10 article objects for the username paginated to page one [DEFAULT CASE]', () => request
+        .get('/api/users/icellusedkars/articles')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(10);
+        }));
+
+      it('GET response status:200 and an array of 10 article objects for the username paginated to page one [QUERY CASE]', () => request
+        .get('/api/users/icellusedkars/articles?p=2')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(1);
+          expect(body.articles[0].title).to.equal('Am I a cat in a hat?');
+        }));
+
       it('GET ERR response status:400 and a bad request message for username which does not exist', () => request
         .get('/api/users/chemical_genius/articles')
         .expect(400)
@@ -737,7 +778,7 @@ describe('/api', () => {
           );
         }));
 
-      it('GET response status:200 and an array of 10 article objects for the topic [DEFAULT CASE]', () => request
+      it('GET response status:200 and an array of 10 article objects [DEFAULT CASE]', () => request
         .get('/api/articles')
         .expect(200)
         .then(({
@@ -746,7 +787,7 @@ describe('/api', () => {
           expect(body.articles).to.have.length(10);
         }));
 
-      it('GET response status:200 and an array of 5 article objects for the topic [QUERY CASE]', () => request
+      it('GET response status:200 and an array of 5 article objects [QUERY CASE]', () => request
         .get('/api/articles?limit=5')
         .expect(200)
         .then(({
@@ -755,7 +796,7 @@ describe('/api', () => {
           expect(body.articles).to.have.length(5);
         }));
 
-      it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
+      it('GET response status:200 and an array of 10 article objects sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
         .get('/api/articles')
         .expect(200)
         .then(({
@@ -767,7 +808,7 @@ describe('/api', () => {
           );
         }));
 
-      it('GET response status:200 and an array of 10 article objects for the topic sorted by title [QUERY CASE] [DEFAULT DESC]', () => request
+      it('GET response status:200 and an array of 10 article objects sorted by title [QUERY CASE] [DEFAULT DESC]', () => request
         .get('/api/articles?sort_by=title')
         .expect(200)
         .then(({
@@ -777,7 +818,7 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Z');
         }));
 
-      it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
+      it('GET response status:200 and an array of 10 article objects sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
         .get('/api/articles?order=ASC')
         .expect(200)
         .then(({
@@ -785,6 +826,25 @@ describe('/api', () => {
         }) => {
           expect(body.articles).to.have.length(10);
           expect(body.articles[0].title).to.equal('Moustache');
+        }));
+
+      it('GET response status:200 and an array of 10 article objects paginated to page one [DEFAULT CASE]', () => request
+        .get('/api/articles')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(10);
+        }));
+
+      it('GET response status:200 and an array of 7 article objects paginated to page two [QUERY CASE]', () => request
+        .get('/api/articles?p=2')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.articles).to.have.length(7);
+          expect(body.articles[0].title).to.equal('Am I?');
         }));
     });
 
@@ -1046,6 +1106,25 @@ describe('/api', () => {
         }) => {
           expect(body.comments).to.have.length(10);
           expect(body.comments[0].author).to.equal('butter_bridge');
+        }));
+
+      it('GET response status:200 and an array of 10 comment objects for the article_id paginated to page one [DEFAULT CASE]', () => request
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.comments).to.have.length(10);
+        }));
+
+      it('GET response status:200 and an array of 10 comment objects for the article_id paginated to page two [QUERY CASE]', () => request
+        .get('/api/articles/1/comments?p=2')
+        .expect(200)
+        .then(({
+          body,
+        }) => {
+          expect(body.comments).to.have.length(3);
+          expect(body.comments[0].author).to.equal('icellusedkars');
         }));
 
       it('GET ERR response status:400 and a bad request message for article_id which does not exist', () => request

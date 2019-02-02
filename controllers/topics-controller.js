@@ -31,7 +31,7 @@ exports.addTopic = (req, res, next) => {
       if (allowedTopics.length !== 0) {
         return Promise.reject({
           status: 422,
-          message: 'method not allowed',
+          message: 'unable to process',
         });
       }
       return addNewTopic(req.body)
@@ -50,6 +50,7 @@ exports.getArticlesByTopic = (req, res, next) => {
     limit,
     sort_by,
     order,
+    p,
   } = req.query;
 
   fetchAllArticlesByTopic(topic)
@@ -61,7 +62,7 @@ exports.getArticlesByTopic = (req, res, next) => {
           message: 'bad request',
         });
       }
-      return fetchArticlesByTopic(topic, limit, sort_by, order)
+      return fetchArticlesByTopic(topic, limit, sort_by, order, p)
         .then((result) => {
           if (result.length === 0) {
             return Promise.reject({

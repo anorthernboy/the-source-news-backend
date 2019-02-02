@@ -26,8 +26,20 @@ exports.addUser = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return addNewUser(req.body)
-    .then(([user]) => res.status(201).json(user))
+  return fetchUsers()
+    .then((users) => {
+      const allowedUsers = users.filter(userObject => userObject.username === req.body.username);
+      if (allowedUsers.length !== 0) {
+        return Promise.reject({
+          status: 422,
+          message: 'unable to process',
+        });
+      }
+      return addNewUser(req.body)
+        .then(([user]) => {
+          res.status(201).json(user);
+        });
+    })
     .catch(next);
 };
 
@@ -56,6 +68,7 @@ exports.getArticlesByUsername = (req, res, next) => {
     limit,
     sort_by,
     order,
+    p,
   } = req.query;
   fetchAllArticlesByUsername(username)
     .then((usernames) => {
@@ -66,7 +79,7 @@ exports.getArticlesByUsername = (req, res, next) => {
           message: 'bad request',
         });
       }
-      return fetchArticlesByUsername(username, limit, sort_by, order)
+      return fetchArticlesByUsername(username, limit, sort_by, order, p)
         .then((result) => {
           if (result.length === 0) {
             return Promise.reject({

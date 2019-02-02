@@ -1,11 +1,11 @@
 exports.send400 = (req, res, next) => next({
   status: 400,
-  message: 'method not allowed',
+  message: 'bad request',
 });
 
 exports.send404 = (req, res, next) => next({
   status: 404,
-  message: 'method not allowed',
+  message: 'not found',
 });
 
 exports.send405 = (req, res, next) => next({
@@ -15,12 +15,12 @@ exports.send405 = (req, res, next) => next({
 
 exports.send422 = (req, res, next) => next({
   status: 422,
-  message: 'method not allowed',
+  message: 'unable to process',
 });
 
 exports.send500 = (req, res, next) => next({
   status: 500,
-  message: 'method not allowed',
+  message: 'internal server error',
 });
 
 exports.handle400 = (err, req, res, next) => {
@@ -49,7 +49,7 @@ exports.handle405 = (err, req, res, next) => {
 
 exports.handle422 = (err, req, res, next) => {
   if (err.status === 422) {
-    res.status(405).json({
+    res.status(422).json({
       msg: 'unable to process',
     });
   } else next(err);
