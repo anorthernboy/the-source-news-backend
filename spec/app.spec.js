@@ -653,14 +653,14 @@ describe('/api', () => {
           expect(body.msg).to.equal('bad request');
         }));
 
-      // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('GET ERR response status:404 and a not found message for username not passed as param ', () => request
+      // is bad request rather than not found as it routes to /api/users/:username
+      it('GET ERR response status:400 and a bad request message for username not passed as param ', () => request
         .get('/api/users/articles')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
     });
   });
@@ -1136,8 +1136,8 @@ describe('/api', () => {
           });
       });
 
-      // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('POST ERR response status:404 and a not found message for no article_id param', () => {
+      // is method not allowed rather than not found as it routes to /api/articles/:article_id which does not accept POST requests
+      it('POST ERR response status:405 and a method not allowed message for no article_id param', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
@@ -1145,11 +1145,11 @@ describe('/api', () => {
         return request
           .post('/api/articles/comments')
           .send(newComment)
-          .expect(404)
+          .expect(405)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('not found');
+            expect(body.msg).to.equal('method not allowed');
           });
       });
     });
