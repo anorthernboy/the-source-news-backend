@@ -4,11 +4,15 @@ const usersRouter = require('./users-route');
 const articlesRouter = require('./articles-route');
 const commentsRouter = require('./comments-route');
 const {
-  send405Error,
   getEndpoints,
 } = require('../controllers/api-controller');
+const {
+  send405,
+} = require('../errors/index');
 
-router.route('/').get(getEndpoints).all(send405Error);
+router.route('/')
+  .get(getEndpoints)
+  .all(send405);
 router.use('/topics', topicsRouter);
 router.use('/users', usersRouter);
 router.use('/articles', articlesRouter);

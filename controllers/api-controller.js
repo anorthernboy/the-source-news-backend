@@ -1,8 +1,3 @@
-exports.send405Error = (req, res, next) => next({
-  status: 405,
-  message: 'method not allowed',
-});
-
 exports.getEndpoints = (req, res, next) => {
   res.status(200).json({
     '/api/topics': 'responds with an array of topic objects',

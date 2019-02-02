@@ -1,14 +1,10 @@
 const {
   fetchTopics,
   addNewTopic,
+  fetchAllArticlesByTopic,
   fetchArticlesByTopic,
   addNewArticle,
 } = require('../db/models/topics-model');
-
-exports.send405Error = (req, res, next) => next({
-  status: 405,
-  message: 'method not allowed',
-});
 
 exports.getTopics = (req, res, next) => {
   fetchTopics()
@@ -45,26 +41,57 @@ exports.getArticlesByTopic = (req, res, next) => {
     sort_by,
     order,
   } = req.query;
-  fetchArticlesByTopic(topic, limit, sort_by, order)
-    .then((result) => {
-      if (result.length === 0) {
+
+  fetchAllArticlesByTopic(topic)
+    .then((topics) => {
+      const allowedTopics = topics.filter(topicObject => topicObject.topic === topic);
+      if (allowedTopics.length === 0) {
         return Promise.reject({
-          status: 404,
-          message: 'not found',
+          status: 400,
+          message: 'bad request',
         });
       }
-      const articles = result.reduce((acc, curr) => {
-        acc.articles.push(curr);
-        return acc;
-      }, {
-        total_count: result.length,
-        articles: [],
-      });
-
-      return res.status(200).json(articles);
+      return fetchArticlesByTopic(topic, limit, sort_by, order)
+        .then((result) => {
+          if (result.length === 0) {
+            return Promise.reject({
+              status: 404,
+              message: 'not found',
+            });
+          }
+          const articles = result.reduce((acc, curr) => {
+            acc.articles.push(curr);
+            return acc;
+          }, {
+            total_count: topics.length,
+            articles: [],
+          });
+          return res.status(200).json(articles);
+        });
     })
     .catch(next);
 };
+
+//   fetchArticlesByTopic(topic, limit, sort_by, order)
+//     .then((result) => {
+//       if (result.length === 0) {
+//         return Promise.reject({
+//           status: 404,
+//           message: 'not found',
+//         });
+//       }
+//       const articles = result.reduce((acc, curr) => {
+//         acc.articles.push(curr);
+//         return acc;
+//       }, {
+//         total_count: result.length,
+//         articles: [],
+//       });
+
+//       return res.status(200).json(articles);
+//     })
+//     .catch(next);
+// };
 
 exports.addArticleByTopic = (req, res, next) => {
   const {

@@ -14,7 +14,7 @@ For this sprint ensure you have the eslint extension installed in VS-Code as it 
 
 ### NOTE 2:
 
-Read this README.md carefully! :) 
+Read this README.md carefully! :)
 
 ### Step 1 - Seeding
 
@@ -68,20 +68,30 @@ Data has been provided for both testing and development environments so you will
 Your server should have the following end-points:
 
 ```http
-GET /api/topics
+>>>>>>>>> GET /api/topics
+>>>>>>>>> testing
+>>>>>>>>> 200 success
 ```
 
 - responds with an array of topic objects - each object should have a `slug` and `description` property.
 
 ```http
-POST /api/topics
+>>>>>>>>> POST /api/topics
+>>>>>>>>> 201 success
+>>>>>>>>> 400 for missing key
+>>>>>>>>> 422 for slug should be unique
+>>>>>>>>> no params to test
 ```
 
 - body accepts an object containing `slug` and `description` property, the `slug` must be unique
 - responds with the posted topic object
 
 ```http
-GET /api/topics/:topic/articles
+>>>>>>>>> GET /api/topics/:topic/articles
+>>>>>>>>> 200 success
+>>>>>>>>> test queries
+>>>>>>>>> 404 for bad topic_id
+>>>>>>>>> 404 for no topic_id passed
 ```
 
 Responds with:
@@ -110,14 +120,20 @@ Queries
 - Both `comments` and `articles` data in the test-data are given ordered in descending order of time : this will be useful to you when it comes to writing your tests!
 
 ```http
-POST /api/topics/:topic/articles
+>>>>>>>>> POST /api/topics/:topic/articles
+>>>>>>>>> 201 success
+>>>>>>>>> 400 for missing key
+>>>>>>>>> 400 for topic_id which does not exist
+>>>>>>>>> 404 for no topic_id passed
 ```
 
 - request body accepts an object containing a `title` , `body` and a `username` property
 - responds with the posted article
 
 ```http
-GET /api/articles
+>>>>>>>>> GET /api/articles
+>>>>>>>>> 200 success
+>>>>>>>>> queries testing
 ```
 
 Responds with:
@@ -143,7 +159,10 @@ Queries
   - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
 ```http
-GET /api/articles/:article_id
+>>>>>>>>> GET /api/articles/:article_id
+>>>>>>>>> 200 success
+>>>>>>>>> 400 for article_id whcih does not exist
+>>>>>>>>> 400 for article_id not number
 ```
 
 - responds with an article object
@@ -158,7 +177,13 @@ GET /api/articles/:article_id
   - `topic`
 
 ```http
-PATCH /api/articles/:article_id
+>>>>>>>>> PATCH /api/articles/:article_id
+>>>>>>>>> 200 success
+>>>>>>>>> 400 for article_id which does not exist
+>>>>>>>>> 400 for article_id not number
+>>>>>>>>> 405 for no article_id (as path becomes /api/articles)
+>>>>>>>>> 400 for added vote not a number
+>>>>>>>>> 400 for added vote missing inc_votes key
 ```
 
 - request body accepts an object in the form `{ inc_votes: newVote }`
@@ -170,14 +195,23 @@ PATCH /api/articles/:article_id
 - this end-point should respond with the article you have just updated
 
 ```http
-DELETE /api/articles/:article_id
+>>>>>>>>> DELETE /api/articles/:article_id
+>>>>>>>>> 204 success, no response
+>>>>>>>>> 400 for article_id not a number
+>>>>>>>>> 400 for article_id does not exist
+>>>>>>>>> 405 for no article_id (as path becomes /api/articles)
 ```
 
 - should delete the given article by `article_id`
 - should respond with 204 and no-content
 
 ```http
-GET /api/articles/:article_id/comments
+>>>>>>>>> GET /api/articles/:article_id/comments
+>>>>>>>>> 200 success
+>>>>>>>>> test queries
+>>>>>>>>> 404 for no art_id
+>>>>>>>>> 400 for article_id not a number
+>>>>>>>>> 400 for article_id does not exist
 ```
 
 - responds with an array of comments for the given `article_id`
@@ -198,14 +232,27 @@ Queries
 * sort_ascending, when "true" returns the results sorted in ascending order (defaults to descending)
 
 ```http
-POST /api/articles/:article_id/comments
+>>>>>>>>> POST /api/articles/:article_id/comments
+>>>>>>>>> 201 success
+>>>>>>>>> 400 for missing key
+>>>>>>>>> 400 for article_id which does not exist
+>>>>>>>>> 400 for article_id which is not a number
+>>>>>>>>> 404 for no article_id passed
 ```
 
 - request body accepts an object with a `username` and `body`
 - responds with the posted comment
 
 ```http
-PATCH /api/articles/:article_id/comments/:comment_id
+>>>>>>>>> PATCH /api/articles/:article_id/comments/:comment_id
+>>>>>>>>> 200 success
+>>>>>>>>> 400 for missing key
+>>>>>>>>> 400 for article_id which does not exist
+>>>>>>>>> 400 for article_id which is not a number
+>>>>>>>>> 404 for no article_id passed
+>>>>>>>>> 400 for comment_id which does not exist
+>>>>>>>>> 400 for comment_id which is not a number
+>>>>>>>>> 405 for no comment_id passed
 ```
 
 - request body accepts an object in the form `{ inc_votes: newVote }`
@@ -217,14 +264,23 @@ PATCH /api/articles/:article_id/comments/:comment_id
 - this end-point should respond with the comment you have just updated
 
 ```http
-DELETE /api/articles/:article_id/comments/:comment_id
+>>>>>>>>> DELETE /api/articles/:article_id/comments/:comment_id
+>>>>>>>>> 204 success, no response
+>>>>>>>>> 400 for article_id which does not exist
+>>>>>>>>> 400 for article_id which is not a number
+>>>>>>>>> 404 for no article_id passed
+>>>>>>>>> 400 for comment_id which does not exist
+>>>>>>>>> 400 for comment_id which is not a number
+>>>>>>>>> 405 for no comment_id passed
 ```
 
 - should delete the given comment by `comment_id`
 - should respond with 204 and no-content
 
 ```http
-GET /api/users
+>>>>>>>>> GET /api/users
+>>>>>>>>> testing
+>>>>>>>>> 200 success
 ```
 
 - should respond with an array of user objects
@@ -234,14 +290,20 @@ GET /api/users
   - `name`
 
 ```http
-POST /api/users
+>>>>>>>>> POST /api/users
+>>>>>>>>> 201 success
+>>>>>>>>> 400 for missing key
+>>>>>>>>> 422 for username should be unique
+>>>>>>>>> no params to test
 ```
 
 - request body accepts an object containing a `username` , `avatar_url` and a `name` property
 - responds with the posted user
 
 ```http
-GET /api/users/:username
+>>>>>>>>> GET /api/users/:username
+>>>>>>>>> 200 success
+>>>>>>>>> 400 for username does not exist
 ```
 
 - should respond with a user object
@@ -251,7 +313,11 @@ GET /api/users/:username
   - `name`
 
 ```http
-GET /api/users/:username/articles
+>>>>>>>>> GET /api/users/:username/articles
+>>>>>>>>> 200 success
+>>>>>>>>> query testing
+>>>>>>>>> 404 for no username
+>>>>>>>>> 400 for username does not exist
 ```
 
 Responds with:

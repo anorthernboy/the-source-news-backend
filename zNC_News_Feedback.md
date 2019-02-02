@@ -32,9 +32,9 @@
 
 <!-- 1) POST status:201 responds with the added topic **array desctrucuring in the controller** -->
 
-<!-- 2. POST status:422 client sends a body with a duplicate slug **need to add error handling (and test) for this** -->
-<!-- 3. POST status:400 if request body is malformed (missing description property) **not null in sql tables (`.notNullabe()`)** -->
-   <!-- 4) status:405 invalid HTTP method for this resource **we can add a `.all()` to our `.route()` chain after our allowed methods and invoke this with a 405 error handler** -->
+2. POST status:422 client sends a body with a duplicate slug **need to add error handling (and test) for this**
+   <!-- 3. POST status:400 if request body is malformed (missing description property) **not null in sql tables (`.notNullabe()`)** -->
+      <!-- 4) status:405 invalid HTTP method for this resource **we can add a `.all()` to our `.route()` chain after our allowed methods and invoke this with a 405 error handler** -->
 
 /topics/:topic/articles
 

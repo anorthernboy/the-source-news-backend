@@ -1,3 +1,28 @@
+exports.send400 = (req, res, next) => next({
+  status: 400,
+  message: 'method not allowed',
+});
+
+exports.send404 = (req, res, next) => next({
+  status: 404,
+  message: 'method not allowed',
+});
+
+exports.send405 = (req, res, next) => next({
+  status: 405,
+  message: 'method not allowed',
+});
+
+exports.send422 = (req, res, next) => next({
+  status: 422,
+  message: 'method not allowed',
+});
+
+exports.send500 = (req, res, next) => next({
+  status: 500,
+  message: 'method not allowed',
+});
+
 exports.handle400 = (err, req, res, next) => {
   if (err.status === 400) {
     res.status(400).json({

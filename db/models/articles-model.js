@@ -1,5 +1,8 @@
 const connection = require('../connection');
 
+exports.fetchAllArticles = () => connection('articles')
+  .select('articles.article_id');
+
 exports.fetchArticles = (limit = 10, sort_by = 'articles.created_at', order = 'DESC') => connection('articles')
   .select('articles.username as author', 'articles.title', 'articles.article_id', 'articles.body', 'articles.votes', 'articles.created_at', 'articles.topic')
   .leftJoin('comments', 'articles.article_id', 'comments.article_id')

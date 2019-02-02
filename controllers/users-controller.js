@@ -2,13 +2,9 @@ const {
   fetchUsers,
   addNewUser,
   fetchUserByUsername,
+  fetchAllArticlesByUsername,
   fetchArticlesByUsername,
 } = require('../db/models/users-model');
-
-exports.send405Error = (req, res, next) => next({
-  status: 405,
-  message: 'method not allowed',
-});
 
 exports.getUsers = (req, res, next) => {
   fetchUsers()
@@ -19,7 +15,18 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.addUser = (req, res, next) => {
-  addNewUser(req.body)
+  const {
+    username,
+    avatar_url,
+    name,
+  } = req.body;
+  if (!username || !avatar_url || !name) {
+    return next({
+      status: 400,
+      message: 'bad request',
+    });
+  }
+  return addNewUser(req.body)
     .then(([user]) => res.status(201).json({
       user,
     }))
@@ -34,8 +41,8 @@ exports.getUserByUsername = (req, res, next) => {
     .then(([user]) => {
       if (!user) {
         return Promise.reject({
-          status: 404,
-          message: 'not found',
+          status: 400,
+          message: 'bad request',
         });
       }
       return res.status(200).json({
@@ -54,22 +61,32 @@ exports.getArticlesByUsername = (req, res, next) => {
     sort_by,
     order,
   } = req.query;
-  fetchArticlesByUsername(username, limit, sort_by, order)
-    .then((result) => {
-      if (result.length === 0) {
+  fetchAllArticlesByUsername(username)
+    .then((usernames) => {
+      const allowedUsernames = usernames.filter(userObject => userObject.username === username);
+      if (allowedUsernames.length === 0) {
         return Promise.reject({
-          status: 404,
-          message: 'not found',
+          status: 400,
+          message: 'bad request',
         });
       }
-      const articles = result.reduce((acc, curr) => {
-        acc.articles.push(curr);
-        return acc;
-      }, {
-        total_count: result.length,
-        articles: [],
-      });
-      return res.status(200).json(articles);
+      return fetchArticlesByUsername(username, limit, sort_by, order)
+        .then((result) => {
+          if (result.length === 0) {
+            return Promise.reject({
+              status: 400,
+              message: 'bad request',
+            });
+          }
+          const articles = result.reduce((acc, curr) => {
+            acc.articles.push(curr);
+            return acc;
+          }, {
+            total_count: usernames.length,
+            articles: [],
+          });
+          return res.status(200).json(articles);
+        });
     })
     .catch(next);
 };

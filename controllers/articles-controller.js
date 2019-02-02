@@ -1,4 +1,5 @@
 const {
+  fetchAllArticles,
   fetchArticles,
   fetchArticlesById,
   updateArticle,
@@ -9,28 +10,25 @@ const {
   removeComment,
 } = require('../db/models/articles-model');
 
-exports.send405Error = (req, res, next) => next({
-  status: 405,
-  message: 'method not allowed',
-});
-
 exports.getArticles = (req, res, next) => {
   const {
     limit,
     sort_by,
     order,
   } = req.query;
-  fetchArticles(limit, sort_by, order)
-    .then((result) => {
-      const articles = result.reduce((acc, curr) => {
-        acc.articles.push(curr);
-        return acc;
-      }, {
-        total_count: result.length,
-        articles: [],
-      });
-      res.status(200).json(articles);
-    })
+
+  fetchAllArticles()
+    .then(allArticles => fetchArticles(limit, sort_by, order)
+      .then((result) => {
+        const articles = result.reduce((acc, curr) => {
+          acc.articles.push(curr);
+          return acc;
+        }, {
+          total_count: allArticles.length,
+          articles: [],
+        });
+        res.status(200).json(articles);
+      }))
     .catch(next);
 };
 
@@ -48,8 +46,8 @@ exports.getArticlesById = (req, res, next) => {
     .then(([article]) => {
       if (!article) {
         return Promise.reject({
-          status: 404,
-          message: 'not found',
+          status: 400,
+          message: 'bad request',
         });
       }
       return res.status(200).json(article);
@@ -64,13 +62,7 @@ exports.patchArticleById = (req, res, next) => {
   const {
     inc_votes,
   } = req.body;
-  if (!article_id) {
-    return next({
-      status: 404,
-      message: 'not found',
-    });
-  }
-  if (isNaN(+article_id)) {
+  if (isNaN(+article_id) || !inc_votes || typeof inc_votes !== 'number') {
     return next({
       status: 400,
       message: 'bad request',
@@ -123,8 +115,8 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .then((comments) => {
       if (comments.length === 0) {
         return Promise.reject({
-          status: 404,
-          message: 'not found',
+          status: 400,
+          message: 'bad request',
         });
       }
       return res.status(200).json({
@@ -160,7 +152,7 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
   const {
     inc_votes,
   } = req.body;
-  if (isNaN(+comment_id) || isNaN(+article_id)) {
+  if (isNaN(+comment_id) || isNaN(+article_id) || !inc_votes || typeof inc_votes !== 'number') {
     return next({
       status: 400,
       message: 'bad request',

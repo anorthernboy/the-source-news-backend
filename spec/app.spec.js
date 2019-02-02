@@ -298,7 +298,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:400 and bad request message', () => {
+      it('POST ERR response status:400 and bad request message when topic object is missing keys', () => {
         const newTopic = {
           description: 'wreck pastel slip snail meadow upset consumption',
         };
@@ -313,7 +313,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:422 and unable to process message', () => {
+      it('POST ERR response status:422 and unable to process message when slug is not unique', () => {
         const newTopic = {
           slug: 'mitch',
           description: 'wreck pastel slip snail meadow upset consumption',
@@ -339,7 +339,7 @@ describe('/api', () => {
         }) => {
           expect(body).to.be.an('object');
           expect(body).to.contains.keys('total_count', 'articles');
-          expect(body.total_count).to.equal(10);
+          expect(body.total_count).to.equal(16);
           expect(body.articles).to.be.an('array');
           expect(body.articles[0].comment_count).to.equal('13');
           expect(body.articles[0]).to.contains.keys(
@@ -403,14 +403,25 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Moustache');
         }));
 
-      it('GET ERR response status:404 and a not found message for topic which does not exist', () => request
+      it('GET ERR response status:400 and a not found message for topic which does not exist', () => request
         .get('/api/topics/western_playland/articles')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
+
+      // WILL NOT PASS THROUGH ROUTER - HOW TO ERROR
+      // it('GET ERR response status:404 and a not found message
+      // for no topic param passed', () => request
+      //   .get('/api/topics/articles')
+      //   .expect(404)
+      // .then(({
+      //   body,
+      // }) => {
+      //   expect(body.msg).to.equal('not found');
+      // }));
     });
 
     describe('addArticleByTopic()', () => {
@@ -441,7 +452,8 @@ describe('/api', () => {
           });
       });
 
-      it('POST response status:404 and not found message for non-existent topic param', () => {
+      // WILL NOT PASS THROUGH ROUTER - HOW TO ERROR
+      it('POST response status:404 and not found message for no topic param passed', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
           body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
@@ -458,6 +470,7 @@ describe('/api', () => {
         // });
       });
 
+      // DOUBLE PROMISE - IS PARAM IN TOPICS.SLUG
       it('POST ERR response status:400 and bad request message for topic which does not exist', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
@@ -475,7 +488,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST response status:400 and a bad request message for malformed article', () => {
+      it('POST response status:400 and a bad request message for malformed article (missing key)', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
           body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
@@ -540,8 +553,38 @@ describe('/api', () => {
           });
       });
 
-      // test 400 for username not unique
-      // test 400 for malformed article
+      it('POST ERR response status:400 and bad request message when missing keys from user object', () => {
+        const newUser = {
+          username: 'stilton_01',
+          avatar_url: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjg34fngpTgAhXvzoUKHRazDl4QjRx6BAgBEAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FStilton_cheese&psig=AOvVaw15ktD8EaV9Tuerl1iw3MoP&ust=1548886717641327',
+        };
+        return request
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('POST ERR response status:422 and unable to process message when username is not unique', () => {
+        const newUser = {
+          username: 'butter_bridge',
+          avatar_url: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjg34fngpTgAhXvzoUKHRazDl4QjRx6BAgBEAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FStilton_cheese&psig=AOvVaw15ktD8EaV9Tuerl1iw3MoP&ust=1548886717641327',
+          name: 'leon',
+        };
+        return request
+          .post('/api/users')
+          .send(newUser)
+          .expect(422)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('unable to process');
+          });
+      });
     });
 
     describe('getUserByUsername()', () => {
@@ -560,13 +603,13 @@ describe('/api', () => {
           );
         }));
 
-      it('GET ERR response status:404 and a not found message for username which does not exist', () => request
+      it('GET ERR response status:400 and a bad request message for username which does not exist', () => request
         .get('/api/users/chemical_genius')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
     });
 
@@ -592,13 +635,13 @@ describe('/api', () => {
           );
         }));
 
-      it('GET response status:200 and an array of 5 article objects for the username [DEFAULT CASE]', () => request
+      it('GET response status:200 and an array of 10 article objects for the username [DEFAULT CASE]', () => request
         .get('/api/users/icellusedkars/articles')
         .expect(200)
         .then(({
           body,
         }) => {
-          expect(body.articles).to.have.length(5);
+          expect(body.articles).to.have.length(10);
         }));
 
       it('GET response status:200 and an array of 2 article objects for the username [QUERY CASE]', () => request
@@ -610,46 +653,57 @@ describe('/api', () => {
           expect(body.articles).to.have.length(2);
         }));
 
-      it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
+      it('GET response status:200 and an array of 10 article objects for the username sorted by date created [DEFAULT CASE] [DEFAULT DESC]', () => request
         .get('/api/users/icellusedkars/articles')
         .expect(200)
         .then(({
           body,
         }) => {
-          expect(body.articles).to.have.length(5);
+          expect(body.articles).to.have.length(10);
           expect(body.articles[0].author).to.equal(
             'icellusedkars',
           );
         }));
 
-      it('GET response status:200 and an array of 5 article objects for the username sorted by title [QUERY CASE] [DEFAULT DESC]', () => request
+      it('GET response status:200 and an array of 10 article objects for the username sorted by title [QUERY CASE] [DEFAULT DESC]', () => request
         .get('/api/users/icellusedkars/articles?sort_by=title')
         .expect(200)
         .then(({
           body,
         }) => {
-          expect(body.articles).to.have.length(5);
+          expect(body.articles).to.have.length(10);
           expect(body.articles[0].title).to.equal('Z');
         }));
 
-      it('GET response status:200 and an array of 5 article objects for the username sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
+      it('GET response status:200 and an array of 10 article objects for the username sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
         .get('/api/users/icellusedkars/articles?order=ASC')
         .expect(200)
         .then(({
           body,
         }) => {
-          expect(body.articles).to.have.length(5);
-          expect(body.articles[0].title).to.equal('Am I a cat?');
+          expect(body.articles).to.have.length(10);
+          expect(body.articles[0].title).to.equal('Am I a catch?');
         }));
 
-      it('GET ERR response status:404 and a not found message for username which does not exist', () => request
+      it('GET ERR response status:400 and a bad request message for username which does not exist', () => request
         .get('/api/users/chemical_genius/articles')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
+
+      // WILL NOT PASS TO ROUTER - HOW TO ERROR
+      // it('GET ERR response status:404 and a not found message
+      // for username not passed as param', () => request
+      //   .get('/api/users/articles')
+      //   .expect(404)
+      // .then(({
+      //   body,
+      // }) => {
+      //   expect(body.msg).to.equal('not found');
+      // }));
     });
   });
 
@@ -660,7 +714,7 @@ describe('/api', () => {
   //                  //
 
   describe('/articles', () => {
-    describe('getArticles()', () => {
+    describe.only('getArticles()', () => {
       it('GET response status:200 and an array of article objects', () => request
         .get('/api/articles')
         .expect(200)
@@ -669,7 +723,7 @@ describe('/api', () => {
         }) => {
           expect(body).to.be.an('object');
           expect(body).to.contains.keys('total_count', 'articles');
-          expect(body.total_count).to.equal(10);
+          expect(body.total_count).to.equal(17);
           expect(body.articles).to.be.an('array');
           expect(body.articles[0]).to.contains.keys(
             'author',
@@ -756,13 +810,13 @@ describe('/api', () => {
           );
         }));
 
-      it('GET ERR response status:404 and a not found message for article_id which does not exist', () => request
+      it('GET ERR response status:400 and a bad request message for article_id which does not exist', () => request
         .get('/api/articles/1000000')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
 
       it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
@@ -843,6 +897,22 @@ describe('/api', () => {
           });
       });
 
+      // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
+      it('PATCH ERR response status:400 and a bad request message for article_id which does not exist', () => {
+        const updateArticle = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/100000')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
       it('PATCH ERR response status:405 and a method not allowed message for a non-existent article_id', () => {
         const updateArticle = {
           inc_votes: 10,
@@ -863,7 +933,7 @@ describe('/api', () => {
           inc_votes: 'flowers',
         };
         return request
-          .patch('/api/articles/the_curse')
+          .patch('/api/articles/1')
           .send(updateArticle)
           .expect(400)
           .then(({
@@ -878,7 +948,7 @@ describe('/api', () => {
           showers: 10,
         };
         return request
-          .patch('/api/articles/the_curse')
+          .patch('/api/articles/1')
           .send(updateArticle)
           .expect(400)
           .then(({
@@ -978,13 +1048,13 @@ describe('/api', () => {
           expect(body.comments[0].author).to.equal('butter_bridge');
         }));
 
-      it('GET ERR response status:404 and a not found message for article_id which does not exist', () => request
+      it('GET ERR response status:400 and a bad request message for article_id which does not exist', () => request
         .get('/api/articles/1000000/comments')
-        .expect(404)
+        .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('bad request');
         }));
 
       it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
@@ -1039,13 +1109,14 @@ describe('/api', () => {
           });
       });
 
+      // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
       it('POST ERR response status:404 and a not found message for article_id which does not exist', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
         };
         return request
-          .post('/api/articles/9999999/comments')
+          .post('/api/articles/1000000/comments')
           .send(newComment)
           .expect(404)
           .then(({
@@ -1053,6 +1124,23 @@ describe('/api', () => {
           }) => {
             expect(body.msg).to.equal('not found');
           });
+      });
+
+      // WILL NOT PASS TO ROUTER - HOW TO ERROR
+      it('POST ERR response status:404 and a not found message for no article_id param', () => {
+        const newComment = {
+          body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
+          username: 'butter_bridge',
+        };
+        return request
+          .post('/api/articles/comments')
+          .send(newComment)
+          .expect(404);
+        // .then(({
+        //   body,
+        // }) => {
+        //   expect(body.msg).to.equal('not found');
+        // });
       });
     });
 
@@ -1109,12 +1197,58 @@ describe('/api', () => {
           });
       });
 
+      it('PATCH ERR response status:400 and a bad request message for inc_votes which is not a number', () => {
+        const updateArticle = {
+          inc_votes: 'flowers',
+        };
+        return request
+          .patch('/api/articles/9/comments/1')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      it('PATCH ERR response status:400 and a bad request message for inc_votes which does not exist', () => {
+        const updateArticle = {
+          showers: 10,
+        };
+        return request
+          .patch('/api/articles/9/comments/1')
+          .send(updateArticle)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
       it('PATCH ERR response status:400 and a bad request message for comment_id which is not a number', () => {
         const updateComment = {
           inc_votes: 10,
         };
         return request
           .patch('/api/articles/9/comments/smiths_disco')
+          .send(updateComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      // DOUBLE PROMISE - IS PARAM IN COMMENTS.COMMENT_ID
+      it('PATCH ERR response status:400 and a bad request message for comment_id which does not exist', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/9/comments/1000000')
           .send(updateComment)
           .expect(400)
           .then(({
@@ -1154,6 +1288,23 @@ describe('/api', () => {
           });
       });
 
+      // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
+      it('PATCH ERR response status:400 and a bad request message for article_id which does not exist', () => {
+        const updateComment = {
+          inc_votes: 10,
+        };
+        return request
+          .patch('/api/articles/1000000/comments/1')
+          .send(updateComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
+          });
+      });
+
+      // WILL NOT PASS TO ROUTER - HOW TO ERROR
       it('PATCH ERR response status:404 and a not found message for non-existent article_id param', () => {
         const updateComment = {
           inc_votes: 10,
@@ -1191,6 +1342,27 @@ describe('/api', () => {
           expect(body.msg).to.equal('bad request');
         }));
 
+      // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
+      it('DELETE ERR response status:400 and a bad request message for article_id which does not exist', () => request
+        .delete('/api/articles/1000000/comments/1')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
+
+      // DOUBLE PROMISE - IS PARAM IN COMMENTS.COMMENT_ID
+      it('DELETE ERR response status:400 and a bad request message for comment_id which does not exist', () => request
+        .delete('/api/articles/9/comments/1000000')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('bad request');
+        }));
+
+      // WILL NOT PASS TO ROUTER - HOW TO ERROR
       it('DELETE ERR response status:404 and a not found message for non-existent article_id param', () => request
         .delete('/api/articles/comments/1')
         .expect(404));
@@ -1198,7 +1370,7 @@ describe('/api', () => {
       //   body,
       // }) => {
       //   expect(body.msg).to.equal('not found');
-      // })
+      // }));
 
       it('DELETE ERR response status:405 and a method not allowed message for non-existent comment_id param', () => request
         .delete('/api/articles/9/comments')
