@@ -279,7 +279,7 @@ describe('/api', () => {
         }));
     });
 
-    describe('addTopic()', () => {
+    describe.only('addTopic()', () => {
       it('POST response status:201 and the new topic object', () => {
         const newTopic = {
           slug: 'joystick',
@@ -292,9 +292,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.topic).to.be.an('object');
-            expect(body.topic.slug).to.equal('joystick');
-            expect(body.topic).to.contains.keys('description', 'slug');
+            expect(body).to.be.an('object');
+            expect(body.slug).to.equal('joystick');
+            expect(body).to.contains.keys('description', 'slug');
           });
       });
 
@@ -438,9 +438,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('object');
-            expect(body.article.topic).to.equal('mitch');
-            expect(body.article).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.topic).to.equal('mitch');
+            expect(body).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -453,22 +453,22 @@ describe('/api', () => {
       });
 
       // WILL NOT PASS THROUGH ROUTER - HOW TO ERROR
-      it('POST response status:404 and not found message for no topic param passed', () => {
-        const newArticle = {
-          title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
-          body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
-          username: 'butter_bridge',
-        };
-        return request
-          .post('/api/topics/articles')
-          .send(newArticle)
-          .expect(404);
-        // .then(({
-        //   body,
-        // }) => {
-        //   expect(body.msg).to.equal('not found');
-        // });
-      });
+      // it('POST response status:404 and not found message for no topic param passed', () => {
+      //   const newArticle = {
+      //     title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
+      //     body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
+      //     username: 'butter_bridge',
+      //   };
+      //   return request
+      //     .post('/api/topics/articles')
+      //     .send(newArticle)
+      //     .expect(404)
+      //   // .then(({
+      //   //   body,
+      //   // }) => {
+      //   //   expect(body.msg).to.equal('not found');
+      //   // });
+      // });
 
       // DOUBLE PROMISE - IS PARAM IN TOPICS.SLUG
       it('POST ERR response status:400 and bad request message for topic which does not exist', () => {
@@ -543,9 +543,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.user).to.be.an('object');
-            expect(body.user.username).to.equal('stilton_01');
-            expect(body.user).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.username).to.equal('stilton_01');
+            expect(body).to.contains.keys(
               'username',
               'name',
               'avatar_url',
@@ -594,9 +594,9 @@ describe('/api', () => {
         .then(({
           body,
         }) => {
-          expect(body.user).to.be.an('object');
-          expect(body.user.username).to.equal('butter_bridge');
-          expect(body.user).to.contains.keys(
+          expect(body).to.be.an('object');
+          expect(body.username).to.equal('butter_bridge');
+          expect(body).to.contains.keys(
             'username',
             'name',
             'avatar_url',
@@ -714,7 +714,7 @@ describe('/api', () => {
   //                  //
 
   describe('/articles', () => {
-    describe.only('getArticles()', () => {
+    describe('getArticles()', () => {
       it('GET response status:200 and an array of article objects', () => request
         .get('/api/articles')
         .expect(200)
@@ -841,10 +841,10 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('object');
-            expect(body.article.article_id).to.equal(1);
-            expect(body.article.votes).to.equal(110);
-            expect(body.article).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.article_id).to.equal(1);
+            expect(body.votes).to.equal(110);
+            expect(body).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -867,10 +867,10 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.article).to.be.an('object');
-            expect(body.article.article_id).to.equal(1);
-            expect(body.article.votes).to.equal(90);
-            expect(body.article).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.article_id).to.equal(1);
+            expect(body.votes).to.equal(90);
+            expect(body).to.contains.keys(
               'article_id',
               'title',
               'body',
@@ -1080,9 +1080,9 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('object');
-            expect(body.comment.article_id).to.equal(2);
-            expect(body.comment).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.article_id).to.equal(2);
+            expect(body).to.contains.keys(
               'comment_id',
               'username',
               'article_id',
@@ -1090,6 +1090,21 @@ describe('/api', () => {
               'created_at',
               'body',
             );
+          });
+      });
+
+      it('POST ERR response status:400 and a bad request message for malformed comment object (missing key)', () => {
+        const newComment = {
+          body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
+        };
+        return request
+          .post('/api/articles/2/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({
+            body,
+          }) => {
+            expect(body.msg).to.equal('bad request');
           });
       });
 
@@ -1109,8 +1124,7 @@ describe('/api', () => {
           });
       });
 
-      // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
-      it('POST ERR response status:404 and a not found message for article_id which does not exist', () => {
+      it('POST ERR response status:400 and a bad request message for article_id which does not exist', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
@@ -1118,30 +1132,30 @@ describe('/api', () => {
         return request
           .post('/api/articles/1000000/comments')
           .send(newComment)
-          .expect(404)
+          .expect(400)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('not found');
+            expect(body.msg).to.equal('bad request');
           });
       });
 
       // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('POST ERR response status:404 and a not found message for no article_id param', () => {
-        const newComment = {
-          body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
-          username: 'butter_bridge',
-        };
-        return request
-          .post('/api/articles/comments')
-          .send(newComment)
-          .expect(404);
-        // .then(({
-        //   body,
-        // }) => {
-        //   expect(body.msg).to.equal('not found');
-        // });
-      });
+      // it('POST ERR response status:404 and a not found message for no article_id param', () => {
+      //   const newComment = {
+      //     body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
+      //     username: 'butter_bridge',
+      //   };
+      //   return request
+      //     .post('/api/articles/comments')
+      //     .send(newComment)
+      //     .expect(404);
+      //   // .then(({
+      //   //   body,
+      //   // }) => {
+      //   //   expect(body.msg).to.equal('not found');
+      //   // });
+      // });
     });
 
     describe('patchArticleCommentVoteByCommentId()', () => {
@@ -1156,11 +1170,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('object');
-            expect(body.comment.comment_id).to.equal(1);
-            expect(body.comment.article_id).to.equal(9);
-            expect(body.comment.votes).to.equal(26);
-            expect(body.comment).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.comment_id).to.equal(1);
+            expect(body.article_id).to.equal(9);
+            expect(body.votes).to.equal(26);
+            expect(body).to.contains.keys(
               'comment_id',
               'username',
               'article_id',
@@ -1182,11 +1196,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.comment).to.be.an('object');
-            expect(body.comment.comment_id).to.equal(1);
-            expect(body.comment.article_id).to.equal(9);
-            expect(body.comment.votes).to.equal(6);
-            expect(body.comment).to.contains.keys(
+            expect(body).to.be.an('object');
+            expect(body.comment_id).to.equal(1);
+            expect(body.article_id).to.equal(9);
+            expect(body.votes).to.equal(6);
+            expect(body).to.contains.keys(
               'comment_id',
               'username',
               'article_id',
@@ -1305,20 +1319,20 @@ describe('/api', () => {
       });
 
       // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('PATCH ERR response status:404 and a not found message for non-existent article_id param', () => {
-        const updateComment = {
-          inc_votes: 10,
-        };
-        return request
-          .patch('/api/articles/comments/1')
-          .send(updateComment)
-          .expect(404);
-        // .then(({
-        //   body,
-        // }) => {
-        //   expect(body.msg).to.equal('not found');
-        // });
-      });
+      // it('PATCH ERR response status:404 and a not found message for non-existent article_id param', () => {
+      //   const updateComment = {
+      //     inc_votes: 10,
+      //   };
+      //   return request
+      //     .patch('/api/articles/comments/1')
+      //     .send(updateComment)
+      //     .expect(404);
+      //   // .then(({
+      //   //   body,
+      //   // }) => {
+      //   //   expect(body.msg).to.equal('not found');
+      //   // });
+      // });
     });
 
     describe('deleteArticleCommentByCommentId()', () => {
@@ -1363,9 +1377,9 @@ describe('/api', () => {
         }));
 
       // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('DELETE ERR response status:404 and a not found message for non-existent article_id param', () => request
-        .delete('/api/articles/comments/1')
-        .expect(404));
+      // it('DELETE ERR response status:404 and a not found message for non-existent article_id param', () => request
+      //   .delete('/api/articles/comments/1')
+      //   .expect(404)
       // .then(({
       //   body,
       // }) => {

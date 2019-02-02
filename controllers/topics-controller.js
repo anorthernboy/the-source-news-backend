@@ -25,10 +25,20 @@ exports.addTopic = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return addNewTopic(req.body)
-    .then(([topic]) => res.status(201).json({
-      topic,
-    }))
+  return fetchTopics()
+    .then((topics) => {
+      const allowedTopics = topics.filter(topicObject => topicObject.slug === req.body.slug);
+      if (allowedTopics.length !== 0) {
+        return Promise.reject({
+          status: 422,
+          message: 'method not allowed',
+        });
+      }
+      return addNewTopic(req.body)
+        .then(([topic]) => {
+          res.status(201).json(topic);
+        });
+    })
     .catch(next);
 };
 
@@ -72,27 +82,6 @@ exports.getArticlesByTopic = (req, res, next) => {
     .catch(next);
 };
 
-//   fetchArticlesByTopic(topic, limit, sort_by, order)
-//     .then((result) => {
-//       if (result.length === 0) {
-//         return Promise.reject({
-//           status: 404,
-//           message: 'not found',
-//         });
-//       }
-//       const articles = result.reduce((acc, curr) => {
-//         acc.articles.push(curr);
-//         return acc;
-//       }, {
-//         total_count: result.length,
-//         articles: [],
-//       });
-
-//       return res.status(200).json(articles);
-//     })
-//     .catch(next);
-// };
-
 exports.addArticleByTopic = (req, res, next) => {
   const {
     topic,
@@ -102,18 +91,26 @@ exports.addArticleByTopic = (req, res, next) => {
     body,
     username,
   } = req.body;
-
   req.body.topic = topic;
-
   if (!title || !body || !username) {
     return next({
       status: 400,
       message: 'bad request',
     });
   }
-  return addNewArticle(req.body)
-    .then(([article]) => res.status(201).json({
-      article,
-    }))
+  return fetchTopics()
+    .then((topics) => {
+      const allowedTopics = topics.filter(topicObject => topicObject.slug === req.params.topic);
+      if (allowedTopics.length === 0) {
+        return Promise.reject({
+          status: 400,
+          message: 'bad request',
+        });
+      }
+      return addNewArticle(req.body)
+        .then(([article]) => {
+          res.status(201).json(article);
+        });
+    })
     .catch(next);
 };

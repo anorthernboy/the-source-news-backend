@@ -6,6 +6,7 @@ const {
   removeArticle,
   fetchCommentsByArticleId,
   addNewComment,
+  fetchAllArticlesAndComments,
   updateVote,
   removeComment,
 } = require('../db/models/articles-model');
@@ -68,10 +69,20 @@ exports.patchArticleById = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return updateArticle(article_id, inc_votes)
-    .then(([article]) => res.status(200).json({
-      article,
-    }))
+  return fetchAllArticles()
+    .then((articles) => {
+      const allowedArticles = articles.filter(articleObject => articleObject.article_id === (+article_id));
+      if (allowedArticles.length === 0) {
+        return Promise.reject({
+          status: 400,
+          message: 'bad request',
+        });
+      }
+      return updateArticle(article_id, inc_votes)
+        .then(([article]) => {
+          res.status(200).json(article);
+        });
+    })
     .catch(next);
 };
 
@@ -130,17 +141,31 @@ exports.addCommentByArticleId = (req, res, next) => {
   const {
     article_id,
   } = req.params;
+  const {
+    body,
+    username,
+  } = req.body;
   req.body.article_id = article_id;
-  if (isNaN(+article_id)) {
+  if (isNaN(+article_id) || !body || !username) {
     return next({
       status: 400,
       message: 'bad request',
     });
   }
-  return addNewComment(req.body)
-    .then(([comment]) => res.status(201).json({
-      comment,
-    }))
+  return fetchAllArticles()
+    .then((articles) => {
+      const allowedArticles = articles.filter(articleObject => articleObject.article_id === (+article_id));
+      if (allowedArticles.length === 0) {
+        return Promise.reject({
+          status: 400,
+          message: 'bad request',
+        });
+      }
+      return addNewComment(req.body)
+        .then(([comment]) => {
+          res.status(201).json(comment);
+        });
+    })
     .catch(next);
 };
 
@@ -158,10 +183,21 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return updateVote(article_id, comment_id, inc_votes)
-    .then(([comment]) => res.status(200).json({
-      comment,
-    }))
+  return fetchAllArticlesAndComments()
+    .then((artAndCom) => {
+      const allowedArticles = artAndCom.filter(artAndComObject => artAndComObject.article_id === (+article_id));
+      const allowedComments = artAndCom.filter(artAndComObject => artAndComObject.comment_id === (+comment_id));
+      if (allowedArticles.length === 0 || allowedComments.length === 0) {
+        return Promise.reject({
+          status: 400,
+          message: 'bad request',
+        });
+      }
+      return updateVote(article_id, comment_id, inc_votes)
+        .then(([comment]) => {
+          res.status(200).json(comment);
+        });
+    })
     .catch(next);
 };
 
@@ -176,7 +212,20 @@ exports.deleteArticleCommentByCommentId = (req, res, next) => {
       message: 'bad request',
     });
   }
-  return removeComment(article_id, comment_id)
-    .then(() => res.status(204).json())
+  return fetchAllArticlesAndComments()
+    .then((artAndCom) => {
+      const allowedArticles = artAndCom.filter(artAndComObject => artAndComObject.article_id === (+article_id));
+      const allowedComments = artAndCom.filter(artAndComObject => artAndComObject.comment_id === (+comment_id));
+      if (allowedArticles.length === 0 || allowedComments.length === 0) {
+        return Promise.reject({
+          status: 400,
+          message: 'bad request',
+        });
+      }
+      return removeComment(article_id, comment_id)
+        .then(() => {
+          res.status(204).json();
+        });
+    })
     .catch(next);
 };

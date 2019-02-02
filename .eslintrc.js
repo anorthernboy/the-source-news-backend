@@ -16,6 +16,7 @@ module.exports = {
         "no-param-reassign": 0,
         "prefer-promise-reject-errors": 0,
         "no-restricted-globals": 0,
+        "max-len": 0,
     }
 
 };

@@ -37,6 +37,10 @@ exports.addNewComment = comment => connection('comments')
   .insert(comment)
   .returning('*');
 
+exports.fetchAllArticlesAndComments = () => connection('articles')
+  .select('articles.article_id as article_id', 'comments.comment_id as comment_id')
+  .leftJoin('comments', 'articles.article_id', 'comments.article_id');
+
 exports.updateVote = (article_id, comment_id, inc_votes) => connection('comments')
   .where('article_id', article_id)
   .andWhere('comment_id', comment_id)

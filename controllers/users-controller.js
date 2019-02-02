@@ -27,9 +27,7 @@ exports.addUser = (req, res, next) => {
     });
   }
   return addNewUser(req.body)
-    .then(([user]) => res.status(201).json({
-      user,
-    }))
+    .then(([user]) => res.status(201).json(user))
     .catch(next);
 };
 
@@ -45,9 +43,7 @@ exports.getUserByUsername = (req, res, next) => {
           message: 'bad request',
         });
       }
-      return res.status(200).json({
-        user,
-      });
+      return res.status(200).json(user);
     })
     .catch(next);
 };
