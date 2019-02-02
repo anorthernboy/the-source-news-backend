@@ -1,32 +1,14 @@
-exports.createRef = (arr, column) => {
-  if (arr.length === 0) {
+const createRef = (array, originValue, originKey) => {
+  if (array.length === 0) {
     return {};
   }
-  if (!column) {
+  if (!originValue || !originKey) {
     return {};
   }
-  return arr.reduce((acc, curr) => {
-    acc[curr[column]] = curr[column];
+  return array.reduce((acc, curr) => {
+    acc[curr[originValue]] = curr[originKey];
     return acc;
   }, {});
-};
-
-exports.createArticleRef = (arr, col1, col2) => {
-  if (arr.length === 0) {
-    return {};
-  }
-  if (!col1 || !col2) {
-    return {};
-  }
-  return arr.reduce((acc, curr) => {
-    acc[curr[col1]] = curr[col2];
-    return acc;
-  }, {});
-};
-
-exports.createTime = (num) => {
-  const numDate = new Date(num);
-  return numDate.toDateString();
 };
 
 const createTime = (num) => {
@@ -34,34 +16,29 @@ const createTime = (num) => {
   return numDate.toDateString();
 };
 
-exports.formatArticles = (articleData, topicRef, userRef) => {
+const formatArticles = (articleData) => {
   if (articleData.length === 0) {
-    return [{}];
-  }
-  if (!topicRef || !userRef) {
     return [{}];
   }
   return articleData.map((article) => {
     const {
-      topic,
       created_by,
       created_at,
       ...restOfArticle
     } = article;
     return {
-      topic: topicRef[topic],
-      username: userRef[created_by],
+      username: created_by,
       created_at: createTime(created_at),
       ...restOfArticle,
     };
   });
 };
 
-exports.formatComments = (commentData, userRef, articleRef) => {
+const formatComments = (commentData, articleRef) => {
   if (commentData.length === 0) {
     return [{}];
   }
-  if (!userRef || !articleRef) {
+  if (!articleRef) {
     return [{}];
   }
   return commentData.map((comment) => {
@@ -72,10 +49,17 @@ exports.formatComments = (commentData, userRef, articleRef) => {
       ...restOfComment
     } = comment;
     return {
-      username: userRef[created_by],
+      username: created_by,
       article_id: articleRef[belongs_to],
       created_at: createTime(created_at),
       ...restOfComment,
     };
   });
+};
+
+module.exports = {
+  createRef,
+  createTime,
+  formatArticles,
+  formatComments,
 };

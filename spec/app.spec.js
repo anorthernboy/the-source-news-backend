@@ -9,7 +9,6 @@ const request = supertest(app);
 const connection = require('../db/connection');
 const {
   createRef,
-  createArticleRef,
   createTime,
   formatArticles,
   formatComments,
@@ -24,43 +23,16 @@ const {
 describe('/utils', () => {
   describe('/createRef()', () => {
     it('returns an empty object for an empty array', () => {
-      expect(createRef([], 'col1')).to.eql({});
+      expect(createRef([], 'col1', 'col2')).to.eql({});
     });
 
-    it('returns an empty object when less than no column parameter passed', () => {
+    it('returns an empty object when less than two column parameters passed', () => {
       expect(createRef([1, 2, 3, 4])).to.eql({});
+      expect(createRef([1, 2, 3, 4], 'col1')).to.eql({});
     });
 
     it('returns correct object when all parameters passed', () => {
       expect(createRef([{
-        article_id: 1,
-        title: 'The vegan carnivore?',
-      }, {
-        article_id: 2,
-        title: 'Meat is murder!',
-      }, {
-        article_id: 3,
-        title: 'Bring home the beans!',
-      }], 'title')).to.eql({
-        'Bring home the beans!': 'Bring home the beans!',
-        'Meat is murder!': 'Meat is murder!',
-        'The vegan carnivore?': 'The vegan carnivore?',
-      });
-    });
-  });
-
-  describe('/createArticleRef()', () => {
-    it('returns an empty object for an empty array', () => {
-      expect(createArticleRef([], 'col1', 'col2')).to.eql({});
-    });
-
-    it('returns an empty object when less than two column parameters passed', () => {
-      expect(createArticleRef([1, 2, 3, 4])).to.eql({});
-      expect(createArticleRef([1, 2, 3, 4], 'col1')).to.eql({});
-    });
-
-    it('returns correct object when all parameters passed', () => {
-      expect(createArticleRef([{
         article_id: 1,
         title: 'The vegan carnivore?',
       }, {
@@ -92,41 +64,12 @@ describe('/utils', () => {
   });
 
   describe('/formatArticles()', () => {
-    it('return empty array-like object when passed empty array', () => {
+    it('returns empty array-like object when passed empty array', () => {
       const articleData = [];
-      const topicRef = {};
-      const userRef = {};
-      expect(formatArticles(articleData, topicRef, userRef)).to.eql([{}]);
-    });
-
-    it('return an empty array-like object when passed less then two reference objects', () => {
-      const articleData = [{
-        title: 'Running a Node App',
-        topic: 'coding',
-        created_by: 'tickle122',
-        body: 'This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.',
-        created_at: 1471522072389,
-      }, {
-        title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
-        topic: 'football',
-        created_by: 'grumpy19',
-        body: 'Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.',
-        created_at: 1500584273256,
-      }];
-      const topicRef = {
-        coding: 'coding',
-        football: 'football',
-      };
-      const userRef = {
-        tickle122: 'tickle122',
-        grumpy19: 'grumpy19',
-      };
-      expect(formatArticles(articleData, topicRef)).to.eql([{}]);
-      expect(formatArticles(articleData, userRef)).to.eql([{}]);
       expect(formatArticles(articleData)).to.eql([{}]);
     });
 
-    it('return an array-like object with updated username and created_at fields', () => {
+    it('returns an array-like object with updated username and created_at fields', () => {
       const articleData = [{
         title: 'Running a Node App',
         topic: 'coding',
@@ -140,15 +83,7 @@ describe('/utils', () => {
         body: 'Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.',
         created_at: 1500584273256,
       }];
-      const topicRef = {
-        coding: 'coding',
-        football: 'football',
-      };
-      const userRef = {
-        tickle122: 'tickle122',
-        grumpy19: 'grumpy19',
-      };
-      expect(formatArticles(articleData, topicRef, userRef)).to.eql([{
+      expect(formatArticles(articleData)).to.eql([{
         title: 'Running a Node App',
         topic: 'coding',
         username: 'tickle122',
@@ -165,14 +100,13 @@ describe('/utils', () => {
   });
 
   describe('/formatComments()', () => {
-    it('return empty array-like object when passed empty array', () => {
+    it('returns empty array-like object when passed empty array', () => {
       const commentData = [];
-      const userRef = {};
       const articleRef = {};
-      expect(formatComments(commentData, userRef, articleRef)).to.eql([{}]);
+      expect(formatComments(commentData, articleRef)).to.eql([{}]);
     });
 
-    it('return an empty array-like object when passed less then two reference objects', () => {
+    it('returns an empty array-like object when not given a reference object', () => {
       const commentData = [{
         body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
         belongs_to: 'The People Tracking Every Touch, Pass And Tackle in the World Cup',
@@ -186,17 +120,6 @@ describe('/utils', () => {
         votes: 7,
         created_at: 1478813209256,
       }];
-      const userRef = {
-        tickle122: 'tickle122',
-        grumpy19: 'grumpy19',
-      };
-      const articleRef = {
-        'Running a Node App': 1,
-        'The Rise Of Thinking Machines: How IBMs Watson Takes On The World': 2,
-        '22 Amazing open source React projects': 3,
-      };
-      expect(formatComments(commentData, userRef)).to.eql([{}]);
-      expect(formatComments(commentData, articleRef)).to.eql([{}]);
       expect(formatComments(commentData)).to.eql([{}]);
     });
 
@@ -214,15 +137,11 @@ describe('/utils', () => {
         votes: 7,
         created_at: 1478813209256,
       }];
-      const userRef = {
-        tickle122: 'tickle122',
-        grumpy19: 'grumpy19',
-      };
       const articleRef = {
         'The People Tracking Every Touch, Pass And Tackle in the World Cup': 1,
         'Making sense of Redux': 2,
       };
-      expect(formatComments(commentData, userRef, articleRef)).to.eql([{
+      expect(formatComments(commentData, articleRef)).to.eql([{
         body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
         article_id: 1,
         username: 'tickle122',
