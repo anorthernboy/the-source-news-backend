@@ -69,18 +69,12 @@ Your server should have the following end-points:
 
 ```http
 >>>>>>>>> GET /api/topics
->>>>>>>>> testing
->>>>>>>>> 200 success
 ```
 
 - responds with an array of topic objects - each object should have a `slug` and `description` property.
 
 ```http
 >>>>>>>>> POST /api/topics
->>>>>>>>> 201 success
->>>>>>>>> 400 for missing key
->>>>>>>>> 422 for slug should be unique
->>>>>>>>> no params to test
 ```
 
 - body accepts an object containing `slug` and `description` property, the `slug` must be unique
@@ -88,10 +82,6 @@ Your server should have the following end-points:
 
 ```http
 >>>>>>>>> GET /api/topics/:topic/articles
->>>>>>>>> 200 success
->>>>>>>>> test queries
->>>>>>>>> 404 for bad topic_id
->>>>>>>>> 404 for no topic_id passed
 ```
 
 Responds with:
@@ -121,10 +111,6 @@ Queries
 
 ```http
 >>>>>>>>> POST /api/topics/:topic/articles
->>>>>>>>> 201 success
->>>>>>>>> 400 for missing key
->>>>>>>>> 400 for topic_id which does not exist
->>>>>>>>> 404 for no topic_id passed
 ```
 
 - request body accepts an object containing a `title` , `body` and a `username` property
@@ -132,8 +118,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/articles
->>>>>>>>> 200 success
->>>>>>>>> queries testing
 ```
 
 Responds with:
@@ -160,9 +144,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/articles/:article_id
->>>>>>>>> 200 success
->>>>>>>>> 400 for article_id whcih does not exist
->>>>>>>>> 400 for article_id not number
 ```
 
 - responds with an article object
@@ -178,12 +159,6 @@ Queries
 
 ```http
 >>>>>>>>> PATCH /api/articles/:article_id
->>>>>>>>> 200 success
->>>>>>>>> 400 for article_id which does not exist
->>>>>>>>> 400 for article_id not number
->>>>>>>>> 405 for no article_id (as path becomes /api/articles)
->>>>>>>>> 400 for added vote not a number
->>>>>>>>> 400 for added vote missing inc_votes key
 ```
 
 - request body accepts an object in the form `{ inc_votes: newVote }`
@@ -196,10 +171,6 @@ Queries
 
 ```http
 >>>>>>>>> DELETE /api/articles/:article_id
->>>>>>>>> 204 success, no response
->>>>>>>>> 400 for article_id not a number
->>>>>>>>> 400 for article_id does not exist
->>>>>>>>> 405 for no article_id (as path becomes /api/articles)
 ```
 
 - should delete the given article by `article_id`
@@ -207,11 +178,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/articles/:article_id/comments
->>>>>>>>> 200 success
->>>>>>>>> test queries
->>>>>>>>> 404 for no art_id
->>>>>>>>> 400 for article_id not a number
->>>>>>>>> 400 for article_id does not exist
 ```
 
 - responds with an array of comments for the given `article_id`
@@ -233,11 +199,6 @@ Queries
 
 ```http
 >>>>>>>>> POST /api/articles/:article_id/comments
->>>>>>>>> 201 success
->>>>>>>>> 400 for missing key
->>>>>>>>> 400 for article_id which does not exist
->>>>>>>>> 400 for article_id which is not a number
->>>>>>>>> 404 for no article_id passed
 ```
 
 - request body accepts an object with a `username` and `body`
@@ -245,14 +206,6 @@ Queries
 
 ```http
 >>>>>>>>> PATCH /api/articles/:article_id/comments/:comment_id
->>>>>>>>> 200 success
->>>>>>>>> 400 for missing key
->>>>>>>>> 400 for article_id which does not exist
->>>>>>>>> 400 for article_id which is not a number
->>>>>>>>> 404 for no article_id passed
->>>>>>>>> 400 for comment_id which does not exist
->>>>>>>>> 400 for comment_id which is not a number
->>>>>>>>> 405 for no comment_id passed
 ```
 
 - request body accepts an object in the form `{ inc_votes: newVote }`
@@ -265,13 +218,6 @@ Queries
 
 ```http
 >>>>>>>>> DELETE /api/articles/:article_id/comments/:comment_id
->>>>>>>>> 204 success, no response
->>>>>>>>> 400 for article_id which does not exist
->>>>>>>>> 400 for article_id which is not a number
->>>>>>>>> 404 for no article_id passed
->>>>>>>>> 400 for comment_id which does not exist
->>>>>>>>> 400 for comment_id which is not a number
->>>>>>>>> 405 for no comment_id passed
 ```
 
 - should delete the given comment by `comment_id`
@@ -279,8 +225,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/users
->>>>>>>>> testing
->>>>>>>>> 200 success
 ```
 
 - should respond with an array of user objects
@@ -291,10 +235,6 @@ Queries
 
 ```http
 >>>>>>>>> POST /api/users
->>>>>>>>> 201 success
->>>>>>>>> 400 for missing key
->>>>>>>>> 422 for username should be unique
->>>>>>>>> no params to test
 ```
 
 - request body accepts an object containing a `username` , `avatar_url` and a `name` property
@@ -302,8 +242,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/users/:username
->>>>>>>>> 200 success
->>>>>>>>> 400 for username does not exist
 ```
 
 - should respond with a user object
@@ -314,10 +252,6 @@ Queries
 
 ```http
 >>>>>>>>> GET /api/users/:username/articles
->>>>>>>>> 200 success
->>>>>>>>> query testing
->>>>>>>>> 404 for no username
->>>>>>>>> 400 for username does not exist
 ```
 
 Responds with:
