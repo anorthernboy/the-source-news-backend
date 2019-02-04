@@ -10,12 +10,12 @@ exports.send404 = (req, res, next) => next({
 
 exports.send405 = (req, res, next) => next({
   status: 405,
-  message: 'method not allowed',
+  message: 'the method is not available on this path',
 });
 
 exports.send422 = (req, res, next) => next({
   status: 422,
-  message: 'unable to process',
+  message: 'an element of the body is not valid',
 });
 
 exports.send500 = (req, res, next) => next({
@@ -27,7 +27,7 @@ exports.handle400 = (err, req, res, next) => {
   if (err.status === 400) {
     res.status(400).json({
       status: 400,
-      msg: 'bad request',
+      msg: 'the body or parameter is not in the correct form',
     });
   } else next(err);
 };
@@ -36,7 +36,7 @@ exports.handle404 = (err, req, res, next) => {
   if (err.status === 404) {
     res.status(404).json({
       status: 404,
-      msg: 'not found',
+      msg: 'the path does not exist in the api',
     });
   } else next(err);
 };
@@ -45,7 +45,7 @@ exports.handle405 = (err, req, res, next) => {
   if (err.status === 405) {
     res.status(405).json({
       status: 405,
-      msg: 'method not allowed',
+      msg: 'the method is not available on this path',
     });
   } else next(err);
 };
@@ -54,7 +54,7 @@ exports.handle422 = (err, req, res, next) => {
   if (err.status === 422) {
     res.status(422).json({
       status: 422,
-      msg: 'unable to process',
+      msg: 'an element of the body is not valid',
     });
   } else next(err);
 };

@@ -217,7 +217,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:400 and bad request message when topic object is missing keys', () => {
+      it('POST ERR response status:400 and the body or parameter is not in the correct form message when topic object is missing keys', () => {
         const newTopic = {
           description: 'wreck pastel slip snail meadow upset consumption',
         };
@@ -228,11 +228,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('POST ERR response status:422 and unable to process message when slug is not unique', () => {
+      it('POST ERR response status:422 and an element of the body is not valid message when slug is not unique', () => {
         const newTopic = {
           slug: 'mitch',
           description: 'wreck pastel slip snail meadow upset consumption',
@@ -244,7 +244,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('unable to process');
+            expect(body.msg).to.equal('an element of the body is not valid');
           });
       });
     });
@@ -344,23 +344,23 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Am I a?');
         }));
 
-      it('GET ERR response status:400 and a not found message for topic which does not exist', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for topic which does not exist', () => request
         .get('/api/topics/western_playland/articles')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
       // WILL NOT PASS THROUGH ROUTER - HOW TO ERROR
-      it('GET ERR response status:404 and a not found message for no topic param passed', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for no topic param passed', () => request
         .get('/api/topics/articles')
         .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
     });
 
@@ -393,7 +393,7 @@ describe('/api', () => {
       });
 
       // WILL NOT PASS THROUGH ROUTER - HOW TO ERROR
-      it('POST response status:404 and not found message for no topic param passed', () => {
+      it('POST response status:404 and the path does not exist in the api message for no topic param passed', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
           body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
@@ -406,12 +406,12 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('not found');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
       // DOUBLE PROMISE - IS PARAM IN TOPICS.SLUG
-      it('POST ERR response status:400 and bad request message for topic which does not exist', () => {
+      it('POST ERR response status:404 and the path does not exist in the api message for topic which does not exist', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
           body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
@@ -420,15 +420,15 @@ describe('/api', () => {
         return request
           .post('/api/topics/gimme_shelter/articles')
           .send(newArticle)
-          .expect(400)
+          .expect(404)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
-      it('POST response status:400 and a bad request message for malformed article (missing key)', () => {
+      it('POST response status:400 and a the body or parameter is not in the correct form message for malformed article (missing key)', () => {
         const newArticle = {
           title: 'FA investigates allegations of homophobic chanting at Sol Campbell',
           body: "The Football Association has launched an investigation into claims Sol Campbell was subjected to homophobic abuse during Macclesfield’s visit to Cheltenham on Saturday. It comes after several Cheltenham fans wrote about chants directed towards the away manager on social media after the match, which the home side won 3 - 2. One supporter tweeted that 'the homophobic chants and references towards Sol Campbell were disgusting. Disappointed the stewards didn’t seem to do anything.' Another said: 'It was horrendous. And not for the first time this season. Cheltenham need to nip it before it happens again.'",
@@ -440,7 +440,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
     });
@@ -493,7 +493,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:400 and bad request message when missing keys from user object', () => {
+      it('POST ERR response status:400 and the body or parameter is not in the correct form message when missing keys from user object', () => {
         const newUser = {
           username: 'stilton_01',
           avatar_url: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjg34fngpTgAhXvzoUKHRazDl4QjRx6BAgBEAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FStilton_cheese&psig=AOvVaw15ktD8EaV9Tuerl1iw3MoP&ust=1548886717641327',
@@ -505,11 +505,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('POST ERR response status:422 and unable to process message when username is not unique', () => {
+      it('POST ERR response status:422 and an element of the body is not valid message when username is not unique', () => {
         const newUser = {
           username: 'butter_bridge',
           avatar_url: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjg34fngpTgAhXvzoUKHRazDl4QjRx6BAgBEAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FStilton_cheese&psig=AOvVaw15ktD8EaV9Tuerl1iw3MoP&ust=1548886717641327',
@@ -522,7 +522,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('unable to process');
+            expect(body.msg).to.equal('an element of the body is not valid');
           });
       });
     });
@@ -543,13 +543,13 @@ describe('/api', () => {
           );
         }));
 
-      it('GET ERR response status:400 and a bad request message for username which does not exist', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for username which does not exist', () => request
         .get('/api/users/chemical_genius')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
     });
 
@@ -644,23 +644,23 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Am I a cat in a hat?');
         }));
 
-      it('GET ERR response status:400 and a bad request message for username which does not exist', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for username which does not exist', () => request
         .get('/api/users/chemical_genius/articles')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
-      // is bad request rather than not found as it routes to /api/users/:username
-      it('GET ERR response status:400 and a bad request message for username not passed as param ', () => request
+      // is the body or parameter is not in the correct form rather than the path does not exist in the api as it routes to /api/users/:username
+      it('GET ERR response status:404 and a the path does not exist in the api message for username not passed as param ', () => request
         .get('/api/users/articles')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
     });
   });
@@ -787,22 +787,22 @@ describe('/api', () => {
           );
         }));
 
-      it('GET ERR response status:400 and a bad request message for article_id which does not exist', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for article_id which does not exist', () => request
         .get('/api/articles/1000000')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
-      it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
+      it('GET ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => request
         .get('/api/articles/smiths_disco')
         .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the body or parameter is not in the correct form');
         }));
     });
 
@@ -859,7 +859,7 @@ describe('/api', () => {
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for article_id which is not a number', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => {
         const updateArticle = {
           inc_votes: 10,
         };
@@ -870,27 +870,27 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
       // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
-      it('PATCH ERR response status:400 and a bad request message for article_id which does not exist', () => {
+      it('PATCH ERR response status:400 and a the path does not exist in the api message for article_id which does not exist', () => {
         const updateArticle = {
           inc_votes: 10,
         };
         return request
           .patch('/api/articles/100000')
           .send(updateArticle)
-          .expect(400)
+          .expect(404)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
-      it('PATCH ERR response status:405 and a method not allowed message for a non-existent article_id', () => {
+      it('PATCH ERR response status:405 and a the method is not available on this path message for a non-existent article_id', () => {
         const updateArticle = {
           inc_votes: 10,
         };
@@ -901,11 +901,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('method not allowed');
+            expect(body.msg).to.equal('the method is not available on this path');
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for inc_votes which is not a number', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for inc_votes which is not a number', () => {
         const updateArticle = {
           inc_votes: 'flowers',
         };
@@ -916,11 +916,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for inc_votes which does not exist', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for inc_votes which does not exist', () => {
         const updateArticle = {
           showers: 10,
         };
@@ -931,7 +931,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
     });
@@ -939,22 +939,22 @@ describe('/api', () => {
     describe('deleteArticleById()', () => {
       it('DELETE response status:204 and no content', () => request.delete('/api/articles/1').expect(204));
 
-      it('DELETE ERR response status:400 and a bad request message for article_id which is not a number', () => request
+      it('DELETE ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => request
         .delete('/api/articles/the_curse')
         .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the body or parameter is not in the correct form');
         }));
 
-      it('DELETE ERR response status:405 and a method not allowed message for a non-existent article_id param', () => request
+      it('DELETE ERR response status:405 and a the method is not available on this path message for a non-existent article_id param', () => request
         .delete('/api/articles')
         .expect(405)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('method not allowed');
+          expect(body.msg).to.equal('the method is not available on this path');
         }));
     });
 
@@ -1044,22 +1044,22 @@ describe('/api', () => {
           expect(body.comments[0].author).to.equal('icellusedkars');
         }));
 
-      it('GET ERR response status:400 and a bad request message for article_id which does not exist', () => request
+      it('GET ERR response status:404 and a the path does not exist in the api message for article_id which does not exist', () => request
         .get('/api/articles/1000000/comments')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
-      it('GET ERR response status:400 and a bad request message for article_id which is not a number', () => request
+      it('GET ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => request
         .get('/api/articles/smiths_disco/comments')
         .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the body or parameter is not in the correct form');
         }));
     });
 
@@ -1089,7 +1089,7 @@ describe('/api', () => {
           });
       });
 
-      it('POST ERR response status:400 and a bad request message for malformed comment object (missing key)', () => {
+      it('POST ERR response status:400 and a the body or parameter is not in the correct form message for malformed comment object (missing key)', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
         };
@@ -1100,11 +1100,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('POST ERR response status:400 and a bad request message for article_id which is not a number', () => {
+      it('POST ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
@@ -1116,11 +1116,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('POST ERR response status:400 and a bad request message for article_id which does not exist', () => {
+      it('POST ERR response status:404 and a the path does not exist in the api message for article_id which does not exist', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
@@ -1128,16 +1128,16 @@ describe('/api', () => {
         return request
           .post('/api/articles/1000000/comments')
           .send(newComment)
-          .expect(400)
+          .expect(404)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
-      // is method not allowed rather than not found as it routes to /api/articles/:article_id which does not accept POST requests
-      it('POST ERR response status:405 and a method not allowed message for no article_id param', () => {
+      // is the method is not available on this path rather than the path does not exist in the api as it routes to /api/articles/:article_id which does not accept POST requests
+      it('POST ERR response status:405 and a the method is not available on this path message for no article_id param', () => {
         const newComment = {
           body: 'Thanks very much Newcastle United for making an awful Brexit day a wee bit better.',
           username: 'butter_bridge',
@@ -1149,7 +1149,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('method not allowed');
+            expect(body.msg).to.equal('the method is not available on this path');
           });
       });
     });
@@ -1207,7 +1207,7 @@ describe('/api', () => {
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for inc_votes which is not a number', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for inc_votes which is not a number', () => {
         const updateArticle = {
           inc_votes: 'flowers',
         };
@@ -1218,11 +1218,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for inc_votes which does not exist', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for inc_votes which does not exist', () => {
         const updateArticle = {
           showers: 10,
         };
@@ -1233,11 +1233,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for comment_id which is not a number', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for comment_id which is not a number', () => {
         const updateComment = {
           inc_votes: 10,
         };
@@ -1248,27 +1248,27 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
       // DOUBLE PROMISE - IS PARAM IN COMMENTS.COMMENT_ID
-      it('PATCH ERR response status:400 and a bad request message for comment_id which does not exist', () => {
+      it('PATCH ERR response status:404 and a the path does not exist in the api message for comment_id which does not exist', () => {
         const updateComment = {
           inc_votes: 10,
         };
         return request
           .patch('/api/articles/9/comments/1000000')
           .send(updateComment)
-          .expect(400)
+          .expect(404)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
-      it('PATCH ERR response status:405 and a method not allowed message for non-existent comment_id param', () => {
+      it('PATCH ERR response status:405 and a the method is not available on this path message for non-existent comment_id param', () => {
         const updateComment = {
           inc_votes: 10,
         };
@@ -1279,11 +1279,11 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('method not allowed');
+            expect(body.msg).to.equal('the method is not available on this path');
           });
       });
 
-      it('PATCH ERR response status:400 and a bad request message for article_id which is not a number', () => {
+      it('PATCH ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => {
         const updateComment = {
           inc_votes: 10,
         };
@@ -1294,28 +1294,28 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the body or parameter is not in the correct form');
           });
       });
 
       // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
-      it('PATCH ERR response status:400 and a bad request message for article_id which does not exist', () => {
+      it('PATCH ERR response status:404 and a the path does not exist in the api message for article_id which does not exist', () => {
         const updateComment = {
           inc_votes: 10,
         };
         return request
           .patch('/api/articles/1000000/comments/1')
           .send(updateComment)
-          .expect(400)
+          .expect(404)
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('bad request');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
 
       // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('PATCH ERR response status:404 and a not found message for non-existent article_id param', () => {
+      it('PATCH ERR response status:404 and a the path does not exist in the api message for non-existent article_id param', () => {
         const updateComment = {
           inc_votes: 10,
         };
@@ -1326,7 +1326,7 @@ describe('/api', () => {
           .then(({
             body,
           }) => {
-            expect(body.msg).to.equal('not found');
+            expect(body.msg).to.equal('the path does not exist in the api');
           });
       });
     });
@@ -1334,61 +1334,61 @@ describe('/api', () => {
     describe('deleteArticleCommentByCommentId()', () => {
       it('DELETE response status:204 and no content', () => request.delete('/api/articles/9/comments/1').expect(204));
 
-      it('DELETE ERR response status:400 and a bad request message for article_id which is not a number', () => request
+      it('DELETE ERR response status:400 and a the body or parameter is not in the correct form message for article_id which is not a number', () => request
         .delete('/api/articles/shake_a_maraca/comments/1')
         .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the body or parameter is not in the correct form');
         }));
 
-      it('DELETE ERR response status:400 and a bad request message for comment_id which is not a number', () => request
+      it('DELETE ERR response status:400 and a the body or parameter is not in the correct form message for comment_id which is not a number', () => request
         .delete('/api/articles/9/comments/shake_a_maraca')
         .expect(400)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the body or parameter is not in the correct form');
         }));
 
       // DOUBLE PROMISE - IS PARAM IN ARTICLES.ARTICLE_ID
-      it('DELETE ERR response status:400 and a bad request message for article_id which does not exist', () => request
+      it('DELETE ERR response status:404 and a the path does not exist in the api message for article_id which does not exist', () => request
         .delete('/api/articles/1000000/comments/1')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
       // DOUBLE PROMISE - IS PARAM IN COMMENTS.COMMENT_ID
-      it('DELETE ERR response status:400 and a bad request message for comment_id which does not exist', () => request
+      it('DELETE ERR response status:404 and a the path does not exist in the api message for comment_id which does not exist', () => request
         .delete('/api/articles/9/comments/1000000')
-        .expect(400)
+        .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('bad request');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
       // WILL NOT PASS TO ROUTER - HOW TO ERROR
-      it('DELETE ERR response status:404 and a not found message for non-existent article_id param', () => request
+      it('DELETE ERR response status:404 and a the path does not exist in the api message for non-existent article_id param', () => request
         .delete('/api/articles/comments/1')
         .expect(404)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('not found');
+          expect(body.msg).to.equal('the path does not exist in the api');
         }));
 
-      it('DELETE ERR response status:405 and a method not allowed message for non-existent comment_id param', () => request
+      it('DELETE ERR response status:405 and a the method is not available on this path message for non-existent comment_id param', () => request
         .delete('/api/articles/9/comments')
         .expect(405)
         .then(({
           body,
         }) => {
-          expect(body.msg).to.equal('method not allowed');
+          expect(body.msg).to.equal('the method is not available on this path');
         }));
     });
   });

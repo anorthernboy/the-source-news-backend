@@ -41,15 +41,15 @@ exports.getArticlesById = (req, res, next) => {
   if (isNaN(+article_id)) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchArticlesById(article_id)
     .then(([article]) => {
       if (!article) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return res.status(200).json(article);
@@ -67,7 +67,7 @@ exports.patchArticleById = (req, res, next) => {
   if (isNaN(+article_id) || !inc_votes || typeof inc_votes !== 'number') {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchAllArticles()
@@ -75,8 +75,8 @@ exports.patchArticleById = (req, res, next) => {
       const allowedArticles = articles.filter(articleObject => articleObject.article_id === (+article_id));
       if (allowedArticles.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return updateArticle(article_id, inc_votes)
@@ -94,13 +94,13 @@ exports.deleteArticleById = (req, res, next) => {
   if (!article_id) {
     return next({
       status: 404,
-      message: 'not found',
+      message: 'the path does not exist in the api',
     });
   }
   if (isNaN(+article_id)) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return removeArticle(article_id)
@@ -121,15 +121,15 @@ exports.getCommentsByArticleId = (req, res, next) => {
   if (isNaN(+article_id)) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchCommentsByArticleId(article_id, limit, sort_by, order, p)
     .then((comments) => {
       if (comments.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return res.status(200).json({
@@ -151,7 +151,7 @@ exports.addCommentByArticleId = (req, res, next) => {
   if (isNaN(+article_id) || !body || !username) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchAllArticles()
@@ -159,8 +159,8 @@ exports.addCommentByArticleId = (req, res, next) => {
       const allowedArticles = articles.filter(articleObject => articleObject.article_id === (+article_id));
       if (allowedArticles.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return addNewComment(req.body)
@@ -182,7 +182,7 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
   if (isNaN(+comment_id) || isNaN(+article_id) || !inc_votes || typeof inc_votes !== 'number') {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchAllArticlesAndComments()
@@ -191,8 +191,8 @@ exports.patchArticleCommentVoteByCommentId = (req, res, next) => {
       const allowedComments = artAndCom.filter(artAndComObject => artAndComObject.comment_id === (+comment_id));
       if (allowedArticles.length === 0 || allowedComments.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return updateVote(article_id, comment_id, inc_votes)
@@ -211,7 +211,7 @@ exports.deleteArticleCommentByCommentId = (req, res, next) => {
   if (isNaN(+article_id) || isNaN(+comment_id)) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchAllArticlesAndComments()
@@ -220,8 +220,8 @@ exports.deleteArticleCommentByCommentId = (req, res, next) => {
       const allowedComments = artAndCom.filter(artAndComObject => artAndComObject.comment_id === (+comment_id));
       if (allowedArticles.length === 0 || allowedComments.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return removeComment(article_id, comment_id)

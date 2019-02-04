@@ -12,7 +12,7 @@ exports.getEndpoints = (req, res, next) => {
             404: 'the path does not exist in the api',
           },
           POST: {
-            400: 'the body is not in the correct form',
+            400: 'the body or parameter is not in the correct form',
             422: 'an element of the body is not valid',
           },
           'OTHER METHODS': {
@@ -35,11 +35,10 @@ exports.getEndpoints = (req, res, next) => {
         },
         errors: {
           GET: {
-            400: 'the parameter does not exist',
             404: 'the path does not exist in the api',
           },
           POST: {
-            400: 'the parameter does not exist or the body is not in the correct form',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
             422: 'an element of the body is not valid',
           },
@@ -80,15 +79,15 @@ exports.getEndpoints = (req, res, next) => {
         },
         errors: {
           GET: {
-            400: 'the parameter does not exist or is not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           PATCH: {
-            400: 'the parameter does not exist or is not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           DELETE: {
-            400: 'the parameter does not exist or is not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           'OTHER METHODS': {
@@ -111,11 +110,11 @@ exports.getEndpoints = (req, res, next) => {
         },
         errors: {
           GET: {
-            400: 'the parameter does not exist or is not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           POST: {
-            400: 'the parameter does not exist or is not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           'OTHER METHODS': {
@@ -130,11 +129,11 @@ exports.getEndpoints = (req, res, next) => {
         },
         errors: {
           PATCH: {
-            400: 'one or both parameters do not exist are not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           DELETE: {
-            400: 'one or both parameters do not exist are not in the correct form (integer)',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
           },
           'OTHER METHODS': {
@@ -155,7 +154,7 @@ exports.getEndpoints = (req, res, next) => {
             404: 'the path does not exist in the api',
           },
           POST: {
-            400: 'the body is not in the correct form',
+            400: 'the body or parameter is not in the correct form',
             404: 'the path does not exist in the api',
             422: 'an element of the body is not valid',
           },
@@ -171,7 +170,6 @@ exports.getEndpoints = (req, res, next) => {
 
         errors: {
           GET: {
-            400: 'the parameter does not exist',
             404: 'the path does not exist in the api',
           },
           'OTHER METHODS': {
@@ -193,7 +191,6 @@ exports.getEndpoints = (req, res, next) => {
         },
         errors: {
           GET: {
-            400: 'the parameter does not exist',
             404: 'the path does not exist in the api',
           },
           'OTHER METHODS': {

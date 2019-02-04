@@ -22,7 +22,7 @@ exports.addTopic = (req, res, next) => {
   if (!slug || !description) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchTopics()
@@ -58,18 +58,18 @@ exports.getArticlesByTopic = (req, res, next) => {
       const allowedTopics = topics.filter(topicObject => topicObject.topic === topic);
       if (allowedTopics.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return fetchArticlesByTopic(topic, limit, sort_by, order, p)
         .then((result) => {
-          if (result.length === 0) {
-            return Promise.reject({
-              status: 404,
-              message: 'not found',
-            });
-          }
+          // if (result.length === 0) {
+          //   return Promise.reject({
+          //     status: 404,
+          //     message: 'the path does not exist in the api',
+          //   });
+          // }
           const articles = result.reduce((acc, curr) => {
             acc.articles.push(curr);
             return acc;
@@ -96,7 +96,7 @@ exports.addArticleByTopic = (req, res, next) => {
   if (!title || !body || !username) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchTopics()
@@ -104,8 +104,8 @@ exports.addArticleByTopic = (req, res, next) => {
       const allowedTopics = topics.filter(topicObject => topicObject.slug === req.params.topic);
       if (allowedTopics.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return addNewArticle(req.body)

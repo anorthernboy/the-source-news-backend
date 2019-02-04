@@ -23,7 +23,7 @@ exports.addUser = (req, res, next) => {
   if (!username || !avatar_url || !name) {
     return next({
       status: 400,
-      message: 'bad request',
+      message: 'the body or parameter is not in the correct form',
     });
   }
   return fetchUsers()
@@ -51,8 +51,8 @@ exports.getUserByUsername = (req, res, next) => {
     .then(([user]) => {
       if (!user) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return res.status(200).json(user);
@@ -75,18 +75,18 @@ exports.getArticlesByUsername = (req, res, next) => {
       const allowedUsernames = usernames.filter(userObject => userObject.username === username);
       if (allowedUsernames.length === 0) {
         return Promise.reject({
-          status: 400,
-          message: 'bad request',
+          status: 404,
+          message: 'the path does not exist in the api',
         });
       }
       return fetchArticlesByUsername(username, limit, sort_by, order, p)
         .then((result) => {
-          if (result.length === 0) {
-            return Promise.reject({
-              status: 400,
-              message: 'bad request',
-            });
-          }
+          // if (result.length === 0) {
+          //   return Promise.reject({
+          //     status: 404,
+          //     message: 'the path does not exist in the api',
+          //   });
+          // }
           const articles = result.reduce((acc, curr) => {
             acc.articles.push(curr);
             return acc;
