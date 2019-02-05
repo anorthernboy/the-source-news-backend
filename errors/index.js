@@ -24,6 +24,12 @@ exports.send500 = (req, res, next) => next({
 });
 
 exports.handle400 = (err, req, res, next) => {
+  if (err.code === '42703') {
+    res.status(400).json({
+      status: 400,
+      msg: 'the column does not exist',
+    });
+  }
   if (err.status === 400) {
     res.status(400).json({
       status: 400,

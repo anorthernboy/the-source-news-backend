@@ -312,6 +312,15 @@ describe('/api', () => {
           expect(body.articles[0].title).to.equal('Z');
         }));
 
+      it('GET response status:400 and a the column does not exist message for the column which is not valid', () => request
+        .get('/api/topics/mitch/articles?sort_by=hello')
+        .expect(400)
+        .then(({
+          body,
+        }) => {
+          expect(body.msg).to.equal('the column does not exist');
+        }));
+
       it('GET response status:200 and an array of 10 article objects for the topic sorted by date created [DEFAULT CASE] and ASC [QUERY CASE]', () => request
         .get('/api/topics/mitch/articles?order=ASC')
         .expect(200)
