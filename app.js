@@ -1,5 +1,5 @@
 const app = require('express')();
-// const cors = require('cors');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const apiRouter = require('./routes/api-route');
 const {
@@ -11,7 +11,7 @@ const {
 } = require('./errors/index');
 const { send404 } = require('./errors/index');
 
-// app.use(cors());
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/', apiRouter);
 app.use('/api', apiRouter);
